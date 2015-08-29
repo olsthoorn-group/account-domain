@@ -1,18 +1,17 @@
 {
-  "name": "og/:package_name",
-  "description": ":package_description",
+  "name": "og/account-domain",
+  "description": "Domain layer code for the OG Account library",
   "keywords": [
     "og",
     "olsthoorn-group",
-    ":package_name"
+    "account-domain"
   ],
-  "homepage": "https://github.com/olsthoorn-group/:package_name",
+  "homepage": "https://github.com/olsthoorn-group/account-domain",
   "license": "MIT",
   "authors": [
     {
-      "name": ":author_name",
-      "email": ":author_email",
-      "homepage": ":author_website",
+      "name": "Mitchell Olsthoorn",
+      "homepage": "http://mitchellolsthoorn.com",
       "role": "Developer"
     }
   ],
@@ -30,12 +29,12 @@
   },
   "autoload": {
     "psr-4": {
-      "OG\\Skeleton\\": "src"
+      "OG\\Account\\Domain\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "OG\\Skeleton\\Test\\": "tests"
+      "OG\\Account\\Test\\Domain\\": "tests"
     }
   },
   "scripts": {
@@ -43,7 +42,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.2-dev"
+      "dev-develop": "0.1-dev"
     }
   }
 }

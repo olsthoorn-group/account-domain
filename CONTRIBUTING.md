@@ -2,7 +2,7 @@
 
 Contributions are **welcome** and will be fully **credited**.
 
-We accept contributions via Pull Requests on [Github](https://github.com/olsthoorn-group/:package_name).
+We accept contributions via Pull Requests on [Github](https://github.com/olsthoorn-group/account-domain).
 
 
 ## Pull Requests
