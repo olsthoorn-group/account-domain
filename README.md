@@ -7,6 +7,7 @@ master:
 [![Quality Score][ico-code-quality-master]][link-code-quality]
 [![Software License][ico-license]](LICENSE)
 [![Total Downloads][ico-downloads]][link-downloads]
+
 develop:  
 [![Latest Pre Version on Packagist][ico-version-pre]][link-packagist]
 [![Build Status][ico-travis-develop]][link-travis]
