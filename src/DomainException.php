@@ -7,5 +7,4 @@ namespace OG\Account\Domain;
  */
 class DomainException extends \RuntimeException
 {
-
 }

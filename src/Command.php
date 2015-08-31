@@ -7,5 +7,4 @@ namespace OG\Account\Domain;
  */
 interface Command
 {
-
 }
