@@ -18,10 +18,29 @@ class UuidIdentifierTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_generate_valid_uuids()
+    {
+        $id = TestUuid1::generate();
+        $pattern = '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i';
+        $this->assertRegExp($pattern, (string) $id);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_create_user_id_from_string()
     {
         $id = TestUuid1::fromString('d16f9fe7-e947-460e-99f6-2d64d65f46bc');
         $this->assertInstanceOf(TestUuid1::class, $id);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_throw_exception_on_malformed_uuid()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        TestUuid1::fromString('bad-uuid');
     }
 
     /**
@@ -56,25 +75,6 @@ class UuidIdentifierTest extends \PHPUnit_Framework_TestCase
         $id1 = TestUuid1::generate();
         $id2 = TestUuid2::fromString((string) $id1);
         $this->assertFalse($id1->equals($id2));
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_generate_valid_uuids()
-    {
-        $id = TestUuid1::generate();
-        $pattern = '/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i';
-        $this->assertRegExp($pattern, (string) $id);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_throw_on_malformed_uuid()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        TestUuid1::fromString('bad-uuid');
     }
 }
 

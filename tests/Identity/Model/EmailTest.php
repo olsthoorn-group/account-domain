@@ -21,13 +21,13 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function it_should_require_valid_email()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
-        new Email('this_is_not_a_valid_email');
+        new Email('invalid_email');
     }
 
     /**
      * @test
      */
-    public function it_should_require_not_null()
+    public function it_should_require_not_null_password()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
         new Email(null);
@@ -36,7 +36,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_not_empty()
+    public function it_should_require_not_empty_password()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
         new Email('');
@@ -58,17 +58,17 @@ class EmailTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_accept_valid_email()
     {
-        $email = new Email('name@domain.com');
+        $email = new Email('local@domain.com');
         $this->assertInstanceOf(Email::class, $email);
     }
 
     /**
      * @test
      */
-    public function it_should_return_as_string()
+    public function it_should_return_email_as_string()
     {
-        $email = new Email('name@domain.com');
-        $this->assertEquals('name@domain.com', (string) $email);
+        $email = new Email('local@domain.com');
+        $this->assertEquals('local@domain.com', (string) $email);
     }
 
     /**
@@ -76,9 +76,9 @@ class EmailTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_have_equality()
     {
-        $one = new Email('name@domain.com');
-        $two = new Email('name@domain.com');
-        $three = new Email('name@domain.net');
+        $one = new Email('local@domain.com');
+        $two = new Email('local@domain.com');
+        $three = new Email('local@domain.net');
         $this->assertTrue($one->equals($two));
         $this->assertFalse($one->equals($three));
     }
