@@ -15,15 +15,28 @@ class Email
     /**
      * Create a new Email.
      *
-     * @param string $value
+     * @param string $value An email with a max length of 100
      */
     public function __construct($value)
     {
         \Assert\that($value)
-            ->email()
+            ->string('Argument has to be a string')
+            ->email('String has to be an email')
             ->maxLength(100, 'Email cannot be longer than 100 characters');
 
         $this->value = $value;
+    }
+
+    /**
+     * Creates an email object from a string.
+     *
+     * @param string $string An email with a max length of 100
+     *
+     * @return static
+     */
+    public static function fromString($string)
+    {
+        return new static($string);
     }
 
     /**
