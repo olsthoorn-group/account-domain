@@ -18,10 +18,30 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_valid_password()
+    public function it_should_accept_valid_password()
+    {
+        $password = new Password('valid_password');
+        $this->assertInstanceOf(Password::class, $password);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_require_password_above_8_characters()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
-        new Password('abc');
+        new Password('1234567');
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_require_password_under_or_100_characters()
+    {
+        $this->setExpectedException('Assert\AssertionFailedException');
+        new Password(
+            'this_is_a_password_that_is_101_characters_loooooooooooooooooooooooooooooooooooooooooooooooooooooooong'
+        );
     }
 
     /**
@@ -36,30 +56,10 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_not_empty_password()
+    public function it_should_accept_password_from_string()
     {
-        $this->setExpectedException('Assert\AssertionFailedException');
-        new Password('');
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_require_password_under_100_characters()
-    {
-        $this->setExpectedException('Assert\AssertionFailedException');
-        new Password(
-            'this_is_not_a_valid_password_this_is_not_a_valid_password_this_is_not_a_valid_password_this_is_not_a_valid'
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_accept_valid_password()
-    {
-        $password = new Password('valid_password');
-        $this->assertInstanceOf(Password::class, $password);
+        $password = Password::fromString('valid_password');
+        $this->assertEquals('valid_password', (string) $password);
     }
 
     /**

@@ -15,15 +15,27 @@ class Password
     /**
      * Create a new Password.
      *
-     * @param string $value
+     * @param string $value A password with a length between 8 to 100 characters
      */
     public function __construct($value)
     {
         \Assert\that($value)
-            ->string('The argument has to be a string')
-            ->betweenLength(8, 100, 'The password has to be 1 to 255 characters long');
+            ->string('Argument has to be a string')
+            ->betweenLength(8, 100, 'Password has to be 8 to 100 characters long');
 
         $this->value = $value;
+    }
+
+    /**
+     * Creates an password object from a string.
+     *
+     * @param string $string A password with a length between 8 to 100 characters
+     *
+     * @return static
+     */
+    public static function fromString($string)
+    {
+        return new static($string);
     }
 
     /**
