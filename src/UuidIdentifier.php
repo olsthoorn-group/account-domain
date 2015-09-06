@@ -29,14 +29,14 @@ abstract class UuidIdentifier implements Identifier, GeneratesIdentifier
     /**
      * Creates an identifier object from a string.
      *
-     * @param $string
+     * @param string $string an uuid
      *
-     * @return Identifier
+     * @return static
      */
     public static function fromString($string)
     {
         \Assert\That($string)
-            ->string('The argument has to be a string')
+            ->string('Argument has to be a string')
             ->uuid('String has to be an UUID');
 
         return new static(Uuid::fromString($string));

@@ -39,7 +39,7 @@ class UuidIdentifierTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_on_malformed_uuid()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->setExpectedException('Assert\AssertionFailedException');
         TestUuid1::fromString('bad-uuid');
     }
 
