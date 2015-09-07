@@ -3,7 +3,7 @@
 namespace OG\Account\Domain\Identity\Model;
 
 /**
- * Password value object to represent an password in the application domain.
+ * Password value object to represent a password in the application domain.
  */
 class Password
 {
