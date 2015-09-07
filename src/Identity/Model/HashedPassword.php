@@ -3,9 +3,9 @@
 namespace OG\Account\Domain\Identity\Model;
 
 /**
- * Password value object to represent a password in the application domain.
+ * HashedPassword value object to represent a password that is hashed in the application domain.
  */
-class Password
+class HashedPassword
 {
     /**
      * @var string
@@ -13,23 +13,22 @@ class Password
     private $value;
 
     /**
-     * Create a new Password.
+     * Create a new HashedPassword.
      *
-     * @param string $value A password with a length between 8 to 100 characters
+     * @param string $value A hashed password
      */
     public function __construct($value)
     {
         \Assert\that($value)
-            ->string('Argument has to be a string')
-            ->betweenLength(8, 100, 'Password has to be 8 to 100 characters long');
+            ->string('Argument has to be a string');
 
         $this->value = $value;
     }
 
     /**
-     * Creates an password object from a string.
+     * Creates an hashed password object from a string.
      *
-     * @param string $string A password with a length between 8 to 100 characters
+     * @param string $string A hashed password
      *
      * @return static
      */
@@ -49,13 +48,13 @@ class Password
     }
 
     /**
-     * Compares the object to another Password object. Returns true if both have the same type and value.
+     * Compares the object to another HashedPassword object. Returns true if both have the same type and value.
      *
-     * @param Password $other
+     * @param HashedPassword $other
      *
      * @return bool
      */
-    public function equals(Password $other)
+    public function equals(HashedPassword $other)
     {
         return $this == $other;
     }

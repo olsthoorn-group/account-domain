@@ -36,6 +36,15 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_require_valid_string_email()
+    {
+        $this->setExpectedException('Assert\AssertionFailedException');
+        new Email([]);
+    }
+
+    /**
+     * @test
+     */
     public function it_should_require_email_under_or_100_characters()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
