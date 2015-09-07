@@ -27,7 +27,16 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_password_above_8_characters()
+    public function it_should_require_valid_password()
+    {
+        $this->setExpectedException('Assert\AssertionFailedException');
+        new Password([]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_require_password_above_or_8_characters()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
         new Password('1234567');
