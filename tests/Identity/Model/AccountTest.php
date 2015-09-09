@@ -66,5 +66,37 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $account = Account::create($this->accountId, $this->email, $this->password);
 
         $this->assertInstanceOf(Account::class, $account);
+
+        return $account;
+    }
+
+    /**
+     * @test
+     * @depends it_should_create_new_account
+     * @param Account $account
+     */
+    public function it_should_return_identifier(Account $account)
+    {
+        $this->assertInstanceOf(AccountId::class, $account->getId());
+    }
+
+    /**
+     * @test
+     * @depends it_should_create_new_account
+     * @param Account $account
+     */
+    public function it_should_return_alias(Account $account)
+    {
+        $this->assertInstanceOf(Email::class, $account->getAlias());
+    }
+
+    /**
+     * @test
+     * @depends it_should_create_new_account
+     * @param Account $account
+     */
+    public function it_should_return_password(Account $account)
+    {
+        $this->assertInstanceOf(HashedPassword::class, $account->getPassword());
     }
 }
