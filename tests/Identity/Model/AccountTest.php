@@ -73,6 +73,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @depends it_should_create_new_account
+     *
      * @param Account $account
      */
     public function it_should_return_identifier(Account $account)
@@ -83,6 +84,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @depends it_should_create_new_account
+     *
      * @param Account $account
      */
     public function it_should_return_alias(Account $account)
@@ -93,6 +95,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @depends it_should_create_new_account
+     *
      * @param Account $account
      */
     public function it_should_return_password(Account $account)
