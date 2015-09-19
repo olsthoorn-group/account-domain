@@ -5,8 +5,10 @@ filter:
 before_commands:
     - "composer install --no-dev --prefer-source"
 tools:
-    external_code_coverage: true
+    external_code_coverage:
+        timeout: 1200
     php_analyzer: true
+    php_code_coverage: true
     php_code_sniffer: true
     php_cpd: true
     php_loc: true
