@@ -130,7 +130,7 @@ class Account implements AggregateRoot
     /**
      * Compares the object to another Entity object. Returns true if both have the same identifier.
      *
-     * @param $other
+     * @param Entity $other
      *
      * @return bool
      */
