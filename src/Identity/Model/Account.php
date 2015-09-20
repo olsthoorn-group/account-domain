@@ -3,6 +3,7 @@
 namespace OG\Account\Domain\Identity\Model;
 
 use OG\Account\Domain\AggregateRoot;
+use OG\Account\Domain\Entity;
 use OG\Account\Domain\Identifier;
 use OG\Account\Domain\RecordsEvents;
 
@@ -124,5 +125,17 @@ class Account implements AggregateRoot
     private function update()
     {
         $this->updated_at = new \DateTimeImmutable();
+    }
+
+    /**
+     * Compares the object to another Entity object. Returns true if both have the same identifier.
+     *
+     * @param $other
+     *
+     * @return bool
+     */
+    public function equals(Entity $other)
+    {
+        return $this->getId() == $other->getId();
     }
 }

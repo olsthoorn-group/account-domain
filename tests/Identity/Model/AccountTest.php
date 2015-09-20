@@ -74,4 +74,16 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($creation_time, $account->getCreatedAt());
         $this->assertEquals($creation_time, $account->getUpdatedAt());
     }
+
+    /**
+     * @test
+     */
+    public function it_should_have_equality()
+    {
+        $one = Account::create($this->accountId, $this->email, $this->password);
+        $two = Account::create($this->accountId, $this->email, $this->password);
+        $three = Account::create(AccountId::fromString("d16f9fe7-e947-460e-99f6-2d64d65f46bc"), $this->email, $this->password);
+        $this->assertTrue($one->equals($two));
+        $this->assertFalse($one->equals($three));
+    }
 }
