@@ -63,43 +63,15 @@ class AccountTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_create_new_account()
     {
+        $creation_time = new \DateTimeImmutable();
         $account = Account::create($this->accountId, $this->email, $this->password);
 
         $this->assertInstanceOf(Account::class, $account);
+        $this->assertTrue($this->accountId->equals($account->getId()));
+        $this->assertTrue($this->email->equals($account->getAlias()));
+        $this->assertTrue($this->password->equals($account->getPassword()));
 
-        return $account;
-    }
-
-    /**
-     * @test
-     * @depends it_should_create_new_account
-     *
-     * @param Account $account
-     */
-    public function it_should_return_identifier(Account $account)
-    {
-        $this->assertInstanceOf(AccountId::class, $account->getId());
-    }
-
-    /**
-     * @test
-     * @depends it_should_create_new_account
-     *
-     * @param Account $account
-     */
-    public function it_should_return_alias(Account $account)
-    {
-        $this->assertInstanceOf(Email::class, $account->getAlias());
-    }
-
-    /**
-     * @test
-     * @depends it_should_create_new_account
-     *
-     * @param Account $account
-     */
-    public function it_should_return_password(Account $account)
-    {
-        $this->assertInstanceOf(HashedPassword::class, $account->getPassword());
+        $this->assertEquals($creation_time, $account->getCreatedAt());
+        $this->assertEquals($creation_time, $account->getUpdatedAt());
     }
 }
