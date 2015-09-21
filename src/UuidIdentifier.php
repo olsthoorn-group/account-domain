@@ -4,6 +4,9 @@ namespace OG\Account\Domain;
 
 use Rhumsaa\Uuid\Uuid;
 
+/**
+ * Provides the common functionality of an identifier.
+ */
 abstract class UuidIdentifier implements Identifier, GeneratesIdentifier
 {
     /**

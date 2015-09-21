@@ -2,6 +2,9 @@
 
 namespace OG\Account\Domain;
 
+/**
+ * Common methods all entities must have.
+ */
 interface Entity
 {
     /**

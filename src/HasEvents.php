@@ -2,6 +2,9 @@
 
 namespace OG\Account\Domain;
 
+/**
+ * Indicates that an object can record events.
+ */
 interface HasEvents
 {
     /**

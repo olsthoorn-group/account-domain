@@ -2,6 +2,9 @@
 
 namespace OG\Account\Domain;
 
+/**
+ * Provides the ability ro record events.
+ */
 trait RecordsEvents
 {
     /**
