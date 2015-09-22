@@ -12,7 +12,7 @@ interface AccountRepository
      *
      * @param AccountId $accountId
      *
-     * @return Account
+     * @return Account|null Account object or null if it can't be found
      */
     public function findById(AccountId $accountId);
 
@@ -21,7 +21,7 @@ interface AccountRepository
      *
      * @param Email $alias
      *
-     * @return Account
+     * @return Account|null Account object or null if it can't be found
      */
     public function findByAlias(Email $alias);
 
