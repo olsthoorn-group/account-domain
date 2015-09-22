@@ -3,7 +3,7 @@
 namespace OG\Account\Domain;
 
 /**
- * Common methods all entities must have.
+ * Object for which equality is based on identity.
  */
 interface Entity
 {

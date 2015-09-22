@@ -2,10 +2,12 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
+use OG\Account\Domain\ValueObject;
+
 /**
  * Email value object to represent an email address in the application domain.
  */
-class Email
+class Email implements ValueObject
 {
     /**
      * @var string
@@ -44,19 +46,29 @@ class Email
      *
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->value;
     }
 
     /**
-     * Compares the object to another Email object. Returns true if both have the same type and value.
+     * Returns a string that can be parsed by fromString().
      *
-     * @param Email $other
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Compares the object to another value object. Returns true if both have the same type and value.
+     *
+     * @param ValueObject $other
      *
      * @return bool
      */
-    public function equals(Email $other)
+    public function equals(ValueObject $other)
     {
         return $this == $other;
     }

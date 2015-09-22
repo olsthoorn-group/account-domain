@@ -58,6 +58,7 @@ class HashedPasswordTest extends \PHPUnit_Framework_TestCase
     {
         $password = new HashedPassword('valid_hashed_password');
         $this->assertEquals('valid_hashed_password', (string) $password);
+        $this->assertEquals('valid_hashed_password', $password->toString());
     }
 
     /**

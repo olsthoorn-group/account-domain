@@ -2,10 +2,12 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
+use OG\Account\Domain\ValueObject;
+
 /**
  * Password value object to represent a password in the application domain.
  */
-class Password
+class Password implements ValueObject
 {
     /**
      * @var string
@@ -43,19 +45,29 @@ class Password
      *
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->value;
     }
 
     /**
-     * Compares the object to another Password object. Returns true if both have the same type and value.
+     * Returns a string that can be parsed by fromString().
      *
-     * @param Password $other
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Compares the object to another value object. Returns true if both have the same type and value.
+     *
+     * @param ValueObject $other
      *
      * @return bool
      */
-    public function equals(Password $other)
+    public function equals(ValueObject $other)
     {
         return $this == $other;
     }

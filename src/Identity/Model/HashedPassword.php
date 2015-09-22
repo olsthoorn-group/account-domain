@@ -2,10 +2,12 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
+use OG\Account\Domain\ValueObject;
+
 /**
  * HashedPassword value object to represent a password that is hashed in the application domain.
  */
-class HashedPassword
+class HashedPassword implements ValueObject
 {
     /**
      * @var string
@@ -42,19 +44,29 @@ class HashedPassword
      *
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->value;
     }
 
     /**
-     * Compares the object to another HashedPassword object. Returns true if both have the same type and value.
+     * Returns a string that can be parsed by fromString().
      *
-     * @param HashedPassword $other
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Compares the object to another value object. Returns true if both have the same type and value.
+     *
+     * @param ValueObject $other
      *
      * @return bool
      */
-    public function equals(HashedPassword $other)
+    public function equals(ValueObject $other)
     {
         return $this == $other;
     }

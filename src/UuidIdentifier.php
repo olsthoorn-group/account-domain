@@ -50,19 +50,29 @@ abstract class UuidIdentifier implements Identifier, GeneratesIdentifier
      *
      * @return string
      */
-    public function __toString()
+    public function toString()
     {
         return $this->value->toString();
     }
 
     /**
-     * Compares the object to another Identifier object. Returns true if both have the same type and value.
+     * Returns a string that can be parsed by fromString().
      *
-     * @param $other
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Compares the object to another value object. Returns true if both have the same type and value.
+     *
+     * @param ValueObject $other
      *
      * @return bool
      */
-    public function equals(Identifier $other)
+    public function equals(ValueObject $other)
     {
         return $this == $other;
     }

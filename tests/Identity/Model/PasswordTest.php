@@ -78,6 +78,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     {
         $password = new Password('valid_password');
         $this->assertEquals('valid_password', (string) $password);
+        $this->assertEquals('valid_password', $password->toString());
     }
 
     /**
