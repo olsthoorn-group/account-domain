@@ -33,11 +33,18 @@ interface AccountRepository
     public function add(Account $account);
 
     /**
+     * Update an account in the collection.
+     *
+     * @param Account $account
+     */
+    public function update(Account $account);
+
+    /**
      * Remove an account from the collection.
      *
      * @param AccountId $accountId
      */
-    public function remove(AccountId $accountId);
+    public function delete(AccountId $accountId);
 
     /**
      * Returns the next identity.
