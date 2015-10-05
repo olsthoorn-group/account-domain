@@ -4,6 +4,7 @@ namespace OG\Account\Tests\Domain\Identity\Model;
 
 use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
+use OG\Account\Domain\Identity\Model\DateTime;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
 
@@ -63,7 +64,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_create_new_account()
     {
-        $creation_time = new \DateTimeImmutable();
+        $creation_time = new DateTime();
 
         $account = Account::create($this->accountId, $this->email, $this->password);
 
@@ -73,6 +74,28 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->password->equals($account->getPassword()));
         $this->assertEquals($creation_time, $account->getCreatedAt());
         $this->assertEquals($creation_time, $account->getUpdatedAt());
+        $this->assertEquals(0, count($account->releaseEvents()));
+
+        return $account;
+    }
+
+    /**
+     * @test
+     * @depends it_should_create_new_account
+     *
+     * @param Account $account
+     */
+    public function it_should_reset_password($account)
+    {
+        $updated_time = new DateTime();
+
+        $newPassword = new HashedPassword('newPassword');
+
+        $account->resetPassword($newPassword);
+
+        $this->assertEquals(1, count($account->releaseEvents()));
+        $this->assertEquals($newPassword, $account->getPassword());
+        $this->assertEquals($updated_time, $account->getUpdatedAt());
     }
 
     /**

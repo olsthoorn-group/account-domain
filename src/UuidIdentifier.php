@@ -22,7 +22,7 @@ abstract class UuidIdentifier implements Identifier, GeneratesIdentifier
     /**
      * Generate a new Identifier.
      *
-     * @return Identifier
+     * @return static
      */
     public static function generate()
     {

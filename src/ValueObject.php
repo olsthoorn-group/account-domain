@@ -10,9 +10,9 @@ interface ValueObject
     /**
      * Creates a value object from a string representation.
      *
-     * @param $string
+     * @param string $string
      *
-     * @return ValueObject
+     * @return static
      */
     public static function fromString($string);
 

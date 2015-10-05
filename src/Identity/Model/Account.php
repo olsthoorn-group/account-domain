@@ -5,6 +5,7 @@ namespace OG\Account\Domain\Identity\Model;
 use OG\Account\Domain\AggregateRoot;
 use OG\Account\Domain\Entity;
 use OG\Account\Domain\Identifier;
+use OG\Account\Domain\Identity\Events\PasswordWasReset;
 use OG\Account\Domain\RecordsEvents;
 
 /**
@@ -30,12 +31,12 @@ class Account implements AggregateRoot
     private $password;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTime
      */
     private $updated_at;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTime
      */
     private $created_at;
 
@@ -51,7 +52,7 @@ class Account implements AggregateRoot
         $this->id = $accountId;
         $this->alias = $email;
         $this->password = $hashedPassword;
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTime();
         $this->update();
     }
 
@@ -102,7 +103,7 @@ class Account implements AggregateRoot
     /**
      * Return when the account was created.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -112,7 +113,7 @@ class Account implements AggregateRoot
     /**
      * Return when the account was last updated.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -120,11 +121,22 @@ class Account implements AggregateRoot
     }
 
     /**
+     * Reset the password.
+     *
+     * @param HashedPassword $password
+     */
+    public function resetPassword(HashedPassword $password)
+    {
+        $this->password = $password;
+        $this->recordThat(new PasswordWasReset());
+    }
+
+    /**
      * Method called when a value has been updated.
      */
     private function update()
     {
-        $this->updated_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTime();
     }
 
     /**
