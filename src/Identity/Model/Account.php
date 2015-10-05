@@ -5,6 +5,7 @@ namespace OG\Account\Domain\Identity\Model;
 use OG\Account\Domain\AggregateRoot;
 use OG\Account\Domain\Entity;
 use OG\Account\Domain\Identifier;
+use OG\Account\Domain\Identity\Events\PasswordWasReset;
 use OG\Account\Domain\RecordsEvents;
 
 /**
@@ -117,6 +118,17 @@ class Account implements AggregateRoot
     public function getUpdatedAt()
     {
         return $this->updated_at;
+    }
+
+    /**
+     * Reset the password.
+     *
+     * @param HashedPassword $password
+     */
+    public function resetPassword(HashedPassword $password)
+    {
+        $this->password = $password;
+        $this->recordThat(new PasswordWasReset());
     }
 
     /**

@@ -75,6 +75,27 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($creation_time, $account->getCreatedAt());
         $this->assertEquals($creation_time, $account->getUpdatedAt());
         $this->assertEquals(0, count($account->releaseEvents()));
+
+        return $account;
+    }
+
+    /**
+     * @test
+     * @depends it_should_create_new_account
+     *
+     * @param Account $account
+     */
+    public function it_should_reset_password($account)
+    {
+        $updated_time = new DateTime();
+
+        $newPassword = new HashedPassword('newPassword');
+
+        $account->resetPassword($newPassword);
+
+        $this->assertEquals(1, count($account->releaseEvents()));
+        $this->assertEquals($newPassword, $account->getPassword());
+        $this->assertEquals($updated_time, $account->getUpdatedAt());
     }
 
     /**
