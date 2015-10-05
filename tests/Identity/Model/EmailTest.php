@@ -21,6 +21,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function it_should_accept_valid_email()
     {
         $email = new Email('local@domain.com');
+
         $this->assertInstanceOf(Email::class, $email);
     }
 
@@ -68,6 +69,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function it_should_accept_email_from_string()
     {
         $email = Email::fromString('local@domain.com');
+
         $this->assertEquals('local@domain.com', (string) $email);
     }
 
@@ -77,6 +79,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     public function it_should_return_email_as_string()
     {
         $email = new Email('local@domain.com');
+
         $this->assertEquals('local@domain.com', (string) $email);
         $this->assertEquals('local@domain.com', $email->toString());
     }
@@ -89,6 +92,7 @@ class EmailTest extends \PHPUnit_Framework_TestCase
         $one = new Email('local@domain.com');
         $two = new Email('local@domain.com');
         $three = new Email('local@domain.net');
+
         $this->assertTrue($one->equals($two));
         $this->assertFalse($one->equals($three));
     }

@@ -21,6 +21,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     public function it_should_accept_valid_password()
     {
         $password = new Password('valid_password');
+
         $this->assertInstanceOf(Password::class, $password);
     }
 
@@ -68,6 +69,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     public function it_should_accept_password_from_string()
     {
         $password = Password::fromString('valid_password');
+
         $this->assertEquals('valid_password', (string) $password);
     }
 
@@ -77,6 +79,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     public function it_should_return_password_as_string()
     {
         $password = new Password('valid_password');
+
         $this->assertEquals('valid_password', (string) $password);
         $this->assertEquals('valid_password', $password->toString());
     }
@@ -89,6 +92,7 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
         $one = new Password('valid_password');
         $two = new Password('valid_password');
         $three = new Password('other_password');
+
         $this->assertTrue($one->equals($two));
         $this->assertFalse($one->equals($three));
     }

@@ -72,6 +72,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
             ->once();
 
         $account = $this->service->createAccount('local@domain.com', 'password');
+
         $this->assertInstanceOf(Account::class, $account);
     }
 
