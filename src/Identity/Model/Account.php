@@ -30,12 +30,12 @@ class Account implements AggregateRoot
     private $password;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTime
      */
     private $updated_at;
 
     /**
-     * @var \DateTimeImmutable
+     * @var DateTime
      */
     private $created_at;
 
@@ -51,7 +51,7 @@ class Account implements AggregateRoot
         $this->id = $accountId;
         $this->alias = $email;
         $this->password = $hashedPassword;
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTime();
         $this->update();
     }
 
@@ -102,7 +102,7 @@ class Account implements AggregateRoot
     /**
      * Return when the account was created.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -112,7 +112,7 @@ class Account implements AggregateRoot
     /**
      * Return when the account was last updated.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -124,7 +124,7 @@ class Account implements AggregateRoot
      */
     private function update()
     {
-        $this->updated_at = new \DateTimeImmutable();
+        $this->updated_at = new DateTime();
     }
 
     /**
