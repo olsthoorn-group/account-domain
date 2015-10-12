@@ -47,7 +47,7 @@ class Reminder implements AggregateRoot
         $this->id = $id;
         $this->email = $email;
         $this->code = $code;
-        $this->created_at = new DateTime();
+        $this->created_at = DateTime::now();
 
         $this->recordThat(new ReminderWasCreated());
     }
@@ -73,7 +73,7 @@ class Reminder implements AggregateRoot
      */
     public function isValid()
     {
-        return $this->getCreatedAt()->add(new \DateInterval('PT1H')) > new DateTime();
+        return $this->getCreatedAt()->add(new \DateInterval('PT1H')) > DateTime::now();
     }
 
     /**

@@ -64,9 +64,11 @@ class AccountTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_create_new_account()
     {
-        $creation_time = new DateTime();
+        $creation_time = new DateTime('yesterday');
 
+        DateTime::setTestDateTime($creation_time);
         $account = Account::create($this->accountId, $this->email, $this->password);
+        DateTime::clearTestDateTime();
 
         $this->assertInstanceOf(Account::class, $account);
         $this->assertTrue($this->accountId->equals($account->getId()));
@@ -87,11 +89,12 @@ class AccountTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_reset_password($account)
     {
-        $updated_time = new DateTime();
-
+        $updated_time = new DateTime('tomorrow');
         $newPassword = new HashedPassword('newPassword');
 
+        DateTime::setTestDateTime($updated_time);
         $account->resetPassword($newPassword);
+        DateTime::clearTestDateTime();
 
         $this->assertEquals(1, count($account->releaseEvents()));
         $this->assertEquals($newPassword, $account->getPassword());

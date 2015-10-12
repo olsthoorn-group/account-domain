@@ -65,7 +65,7 @@ class ReminderTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_create_reminder()
     {
-        $creation_time = new DateTime();
+        $creation_time = DateTime::now();
 
         $reminder = Reminder::request($this->id, $this->email, $this->code);
 

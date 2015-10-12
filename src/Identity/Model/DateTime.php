@@ -31,6 +31,16 @@ class DateTime extends \DateTimeImmutable implements ValueObject
     }
 
     /**
+     * Create new DateTime for the current time and date.
+     *
+     * @return static
+     */
+    public static function now()
+    {
+        return new static();
+    }
+
+    /**
      * Return the test DateTime instance.
      *
      * @return static

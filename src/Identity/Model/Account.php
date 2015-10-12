@@ -52,7 +52,7 @@ class Account implements AggregateRoot
         $this->id = $accountId;
         $this->alias = $email;
         $this->password = $hashedPassword;
-        $this->created_at = new DateTime();
+        $this->created_at = DateTime::now();
         $this->update();
     }
 
@@ -129,6 +129,7 @@ class Account implements AggregateRoot
     {
         $this->password = $password;
         $this->recordThat(new PasswordWasReset());
+        $this->update();
     }
 
     /**
@@ -136,7 +137,7 @@ class Account implements AggregateRoot
      */
     private function update()
     {
-        $this->updated_at = new DateTime();
+        $this->updated_at = DateTime::now();
     }
 
     /**
