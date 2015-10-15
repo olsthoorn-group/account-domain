@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\ValueObject;
+use OG\Core\Domain\ValueObject;
 
 /**
  * ReminderCode value object to represent a random reminder code in the application domain.

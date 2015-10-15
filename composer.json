@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": ">=5.5",
-    "ramsey/uuid": "^2.8",
+    "og/core-domain": "dev-develop",
     "beberlei/assert": "^2.4",
     "paragonie/random_compat": "^1.0"
   },

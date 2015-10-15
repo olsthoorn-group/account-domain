@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\UuidIdentifier;
+use OG\Core\Domain\UuidIdentifier;
 
 /**
  * The identifier value object to identify the reminder entity.

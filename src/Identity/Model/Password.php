@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\ValueObject;
+use OG\Core\Domain\ValueObject;
 
 /**
  * Password value object to represent a password in the application domain.

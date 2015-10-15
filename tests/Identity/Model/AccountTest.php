@@ -4,9 +4,9 @@ namespace OG\Account\Tests\Domain\Identity\Model;
 
 use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
-use OG\Account\Domain\Identity\Model\DateTime;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Core\Domain\Model\DateTime;
 
 class AccountTest extends \PHPUnit_Framework_TestCase
 {

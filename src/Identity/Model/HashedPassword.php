@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\ValueObject;
+use OG\Core\Domain\ValueObject;
 
 /**
  * HashedPassword value object to represent a password that is hashed in the application domain.

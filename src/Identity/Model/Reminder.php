@@ -2,11 +2,12 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\AggregateRoot;
-use OG\Account\Domain\Entity;
-use OG\Account\Domain\Identifier;
 use OG\Account\Domain\Identity\Events\ReminderWasCreated;
-use OG\Account\Domain\RecordsEvents;
+use OG\Core\Domain\AggregateRoot;
+use OG\Core\Domain\Entity;
+use OG\Core\Domain\Identifier;
+use OG\Core\Domain\Model\DateTime;
+use OG\Core\Domain\RecordsEvents;
 
 /**
  * Reminder to reset account password.

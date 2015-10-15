@@ -3,11 +3,11 @@
 namespace OG\Account\Test\Domain\Identity\Model;
 
 use Mockery as m;
-use OG\Account\Domain\Identity\Model\DateTime;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderId;
+use OG\Core\Domain\Model\DateTime;
 
 class ReminderTest extends \PHPUnit_Framework_TestCase
 {

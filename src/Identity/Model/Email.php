@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
-use OG\Account\Domain\ValueObject;
+use OG\Core\Domain\ValueObject;
 
 /**
  * Email value object to represent an email address in the application domain.

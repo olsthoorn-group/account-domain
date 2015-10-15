@@ -2,7 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Events;
 
-use OG\Account\Domain\DomainEvent;
+use OG\Core\Domain\DomainEvent;
 
 /**
  * Event fired when a reminder is created.

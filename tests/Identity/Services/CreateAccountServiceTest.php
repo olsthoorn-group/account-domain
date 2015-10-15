@@ -7,8 +7,8 @@ use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\HashedPassword;
-use OG\Account\Domain\Identity\Services\HashingService;
 use OG\Account\Domain\Identity\Services\CreateAccountService;
+use OG\Account\Domain\Identity\Services\HashingService;
 use OG\Account\Domain\ValueIsNotUniqueException;
 
 class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
