@@ -6,10 +6,12 @@ use Mockery as m;
 use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
+use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Account\Domain\Identity\Model\Password;
+use OG\Account\Domain\Identity\Services\AliasIsAlreadyInUse;
 use OG\Account\Domain\Identity\Services\CreateAccountService;
-use OG\Account\Domain\Identity\Services\HashingService;
-use OG\Account\Domain\ValueIsNotUniqueException;
+use OG\Account\Domain\Identity\Services\PasswordHashingService;
 
 class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +21,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
     private $repository;
 
     /**
-     * @var HashingService|\Mockery\Mock
+     * @var PasswordHashingService|\Mockery\Mock
      */
     private $hashing;
 
@@ -31,7 +33,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->repository = m::mock(AccountRepository::class);
-        $this->hashing = m::mock(HashingService::class);
+        $this->hashing = m::mock(PasswordHashingService::class);
         $this->service = new CreateAccountService($this->repository, $this->hashing);
     }
 
@@ -40,14 +42,17 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_if_email_is_not_unique()
     {
-        $this->setExpectedException(ValueIsNotUniqueException::class);
+        $this->setExpectedException(AliasIsAlreadyInUse::class);
 
         $this->repository
             ->shouldReceive('findByAlias')
             ->once()
             ->andReturn(['id' => 1]);
 
-        $this->service->createAccount('local@domain.com', 'password');
+        $alias = new Email('local@domain.com');
+        $password = new Password('password');
+
+        $this->service->createAccount($alias, $password);
     }
 
     /**
@@ -71,7 +76,10 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('add')
             ->once();
 
-        $account = $this->service->createAccount('local@domain.com', 'password');
+        $alias = new Email('local@domain.com');
+        $password = new Password('password');
+
+        $account = $this->service->createAccount($alias, $password);
 
         $this->assertInstanceOf(Account::class, $account);
     }

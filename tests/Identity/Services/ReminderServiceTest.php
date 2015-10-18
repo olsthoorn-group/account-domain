@@ -8,14 +8,16 @@ use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Account\Domain\Identity\Model\Password;
 use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderId;
 use OG\Account\Domain\Identity\Model\ReminderRepository;
-use OG\Account\Domain\Identity\Services\HashingService;
+use OG\Account\Domain\Identity\Services\AliasIsNotFound;
+use OG\Account\Domain\Identity\Services\PasswordHashingService;
+use OG\Account\Domain\Identity\Services\ReminderCodeIsInvalid;
 use OG\Account\Domain\Identity\Services\ReminderService;
-use OG\Account\Domain\InvalidValueException;
-use OG\Account\Domain\ValueNotFoundException;
+use OG\Core\Domain\Model\DateTime;
 
 class ReminderServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -40,7 +42,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
     private $accountRepository;
 
     /**
-     * @var HashingService|\Mockery\Mock
+     * @var PasswordHashingService|\Mockery\Mock
      */
     private $hashingService;
 
@@ -59,7 +61,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder = m::mock(Reminder::class)->makePartial();
         $this->reminderRepository = m::mock(ReminderRepository::class);
         $this->accountRepository = m::mock(AccountRepository::class);
-        $this->hashingService = m::mock(HashingService::class);
+        $this->hashingService = m::mock(PasswordHashingService::class);
         $this->reminderService = new ReminderService($this->reminderRepository, $this->accountRepository, $this->hashingService);
     }
     /**
@@ -67,14 +69,14 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_when_user_does_not_exist()
     {
-        $this->setExpectedException(ValueNotFoundException::class);
+        $this->setExpectedException(AliasIsNotFound::class);
 
         $this->accountRepository
             ->shouldReceive('findByAlias')
             ->once()
             ->andReturn(null);
 
-        $this->reminderService->request('local@domain.com');
+        $this->reminderService->request(Email::fromString('local@domain.com'));
     }
 
     /**
@@ -97,7 +99,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('add')
             ->once();
 
-        $reminder = $this->reminderService->request('local@domain.com');
+        $reminder = $this->reminderService->request(Email::fromString('local@domain.com'));
 
         $this->assertInstanceOf(Reminder::class, $reminder);
     }
@@ -110,7 +112,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable());
+            ->andReturn(DateTime::now());
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
@@ -127,7 +129,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable('yesterday'));
+            ->andReturn(new DateTime('yesterday'));
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
@@ -141,14 +143,18 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_during_reset_attempt_when_email_or_code_are_invalid()
     {
-        $this->setExpectedException(InvalidValueException::class);
+        $this->setExpectedException(ReminderCodeIsInvalid::class);
 
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
             ->andReturn(null);
 
-        $this->reminderService->reset('local@domain.com', 'password', '441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865');
+        $this->reminderService->reset(
+            Email::fromString('local@domain.com'),
+            new Password('password'),
+            ReminderCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865')
+        );
     }
 
     /**
@@ -159,7 +165,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable());
+            ->andReturn(DateTime::now());
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
@@ -179,7 +185,11 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('deleteByCode')
             ->once();
 
-        $account = $this->reminderService->reset('local@domain.com', 'password', '441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865');
+        $account = $this->reminderService->reset(
+            Email::fromString('local@domain.com'),
+            new Password('password'),
+            ReminderCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865')
+        );
 
         $this->assertInstanceOf(Account::class, $account);
     }

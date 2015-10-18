@@ -20,38 +20,40 @@ class CreateAccountService
     private $accountRepository;
 
     /**
-     * @var HashingService
+     * @var PasswordHashingService
      */
     private $hashingService;
 
     /**
      * Create a new CreateAccountService.
      *
-     * @param AccountRepository $accountRepository
-     * @param HashingService    $hashingService
+     * @param AccountRepository      $accountRepository
+     * @param PasswordHashingService $hashingService
      */
-    public function __construct(AccountRepository $accountRepository, HashingService $hashingService)
+    public function __construct(AccountRepository $accountRepository, PasswordHashingService $hashingService)
     {
         $this->accountRepository = $accountRepository;
         $this->hashingService = $hashingService;
     }
 
     /**
-     * @param $alias
-     * @param $password
+     * Create a new account.
+     *
+     * @param Email    $alias
+     * @param Password $password
      *
      * @return Account
      */
-    public function createAccount($alias, $password)
+    public function createAccount(Email $alias, Password $password)
     {
-        $alias = new Email($alias);
-        $password = new Password($password);
-
+        // Check if the requested alias is not already in use
         $this->checkAliasIsUnique($alias);
 
-        $id = $this->accountRepository->nextIdentity();
+        // Hash password
         $hashedPassword = $this->hashingService->hash($password);
 
+        // Create new account
+        $id = $this->accountRepository->nextIdentity();
         $account = Account::create($id, $alias, $hashedPassword);
         $this->accountRepository->add($account);
 
@@ -70,7 +72,7 @@ class CreateAccountService
         $specification = new AliasIsUnique($this->accountRepository);
 
         if (!$specification->isSatisfiedBy($alias)) {
-            throw new ValueIsNotUniqueException("$alias is already used");
+            throw AliasIsAlreadyInUse::withAlias($alias);
         }
     }
 }
