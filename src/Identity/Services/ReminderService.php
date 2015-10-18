@@ -122,7 +122,7 @@ class ReminderService
             return $account;
         }
 
-        throw new InvalidValueException($code->toString().' is not a valid reminder code');
+        throw ReminderCodeIsInvalid::withReminderCode($code);
     }
 
     /**
@@ -142,6 +142,6 @@ class ReminderService
             return $account;
         }
 
-        throw new ValueNotFoundException($alias->toString().' is not a used alias');
+        throw AliasIsNotFound::withAlias($alias);
     }
 }

@@ -13,10 +13,10 @@ use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderId;
 use OG\Account\Domain\Identity\Model\ReminderRepository;
+use OG\Account\Domain\Identity\Services\AliasIsNotFound;
 use OG\Account\Domain\Identity\Services\PasswordHashingService;
+use OG\Account\Domain\Identity\Services\ReminderCodeIsInvalid;
 use OG\Account\Domain\Identity\Services\ReminderService;
-use OG\Account\Domain\InvalidValueException;
-use OG\Account\Domain\ValueNotFoundException;
 use OG\Core\Domain\Model\DateTime;
 
 class ReminderServiceTest extends \PHPUnit_Framework_TestCase
@@ -69,7 +69,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_when_user_does_not_exist()
     {
-        $this->setExpectedException(ValueNotFoundException::class);
+        $this->setExpectedException(AliasIsNotFound::class);
 
         $this->accountRepository
             ->shouldReceive('findByAlias')
@@ -143,7 +143,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_during_reset_attempt_when_email_or_code_are_invalid()
     {
-        $this->setExpectedException(InvalidValueException::class);
+        $this->setExpectedException(ReminderCodeIsInvalid::class);
 
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
