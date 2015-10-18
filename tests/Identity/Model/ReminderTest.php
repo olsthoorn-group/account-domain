@@ -36,33 +36,6 @@ class ReminderTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_reminder_id()
-    {
-        $this->setExpectedException('Exception');
-        Reminder::request(null, $this->email, $this->code);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_require_email()
-    {
-        $this->setExpectedException('Exception');
-        Reminder::request($this->id, null, $this->code);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_require_code()
-    {
-        $this->setExpectedException('Exception');
-        Reminder::request($this->id, $this->email, null);
-    }
-
-    /**
-     * @test
-     */
     public function it_should_create_reminder()
     {
         $creation_time = DateTime::now();

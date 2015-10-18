@@ -35,33 +35,6 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_user_id()
-    {
-        $this->setExpectedException('Exception');
-        Account::create(null, $this->email, $this->password);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_require_email()
-    {
-        $this->setExpectedException('Exception');
-        Account::create($this->accountId, null, $this->password);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_require_password()
-    {
-        $this->setExpectedException('Exception');
-        Account::create($this->accountId, $this->email, null);
-    }
-
-    /**
-     * @test
-     */
     public function it_should_create_new_account()
     {
         $creation_time = new DateTime('yesterday');
