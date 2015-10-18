@@ -28,18 +28,18 @@ class ReminderService
     private $accountRepository;
 
     /**
-     * @var HashingService
+     * @var PasswordHashingService
      */
     private $hashingService;
 
     /**
      * Create a new ReminderService.
      *
-     * @param ReminderRepository $reminderRepository
-     * @param AccountRepository  $accountRepository
-     * @param HashingService     $hashingService
+     * @param ReminderRepository     $reminderRepository
+     * @param AccountRepository      $accountRepository
+     * @param PasswordHashingService $hashingService
      */
-    public function __construct(ReminderRepository $reminderRepository, AccountRepository $accountRepository, HashingService $hashingService)
+    public function __construct(ReminderRepository $reminderRepository, AccountRepository $accountRepository, PasswordHashingService $hashingService)
     {
         $this->reminderRepository = $reminderRepository;
         $this->accountRepository = $accountRepository;

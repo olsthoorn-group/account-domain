@@ -20,17 +20,17 @@ class CreateAccountService
     private $accountRepository;
 
     /**
-     * @var HashingService
+     * @var PasswordHashingService
      */
     private $hashingService;
 
     /**
      * Create a new CreateAccountService.
      *
-     * @param AccountRepository $accountRepository
-     * @param HashingService    $hashingService
+     * @param AccountRepository      $accountRepository
+     * @param PasswordHashingService $hashingService
      */
-    public function __construct(AccountRepository $accountRepository, HashingService $hashingService)
+    public function __construct(AccountRepository $accountRepository, PasswordHashingService $hashingService)
     {
         $this->accountRepository = $accountRepository;
         $this->hashingService = $hashingService;

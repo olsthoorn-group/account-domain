@@ -12,7 +12,7 @@ use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderId;
 use OG\Account\Domain\Identity\Model\ReminderRepository;
-use OG\Account\Domain\Identity\Services\HashingService;
+use OG\Account\Domain\Identity\Services\PasswordHashingService;
 use OG\Account\Domain\Identity\Services\ReminderService;
 use OG\Account\Domain\InvalidValueException;
 use OG\Account\Domain\ValueNotFoundException;
@@ -40,7 +40,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
     private $accountRepository;
 
     /**
-     * @var HashingService|\Mockery\Mock
+     * @var PasswordHashingService|\Mockery\Mock
      */
     private $hashingService;
 
@@ -59,7 +59,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder = m::mock(Reminder::class)->makePartial();
         $this->reminderRepository = m::mock(ReminderRepository::class);
         $this->accountRepository = m::mock(AccountRepository::class);
-        $this->hashingService = m::mock(HashingService::class);
+        $this->hashingService = m::mock(PasswordHashingService::class);
         $this->reminderService = new ReminderService($this->reminderRepository, $this->accountRepository, $this->hashingService);
     }
     /**

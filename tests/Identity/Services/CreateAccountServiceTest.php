@@ -8,7 +8,7 @@ use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\HashedPassword;
 use OG\Account\Domain\Identity\Services\CreateAccountService;
-use OG\Account\Domain\Identity\Services\HashingService;
+use OG\Account\Domain\Identity\Services\PasswordHashingService;
 use OG\Account\Domain\ValueIsNotUniqueException;
 
 class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
@@ -19,7 +19,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
     private $repository;
 
     /**
-     * @var HashingService|\Mockery\Mock
+     * @var PasswordHashingService|\Mockery\Mock
      */
     private $hashing;
 
@@ -31,7 +31,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->repository = m::mock(AccountRepository::class);
-        $this->hashing = m::mock(HashingService::class);
+        $this->hashing = m::mock(PasswordHashingService::class);
         $this->service = new CreateAccountService($this->repository, $this->hashing);
     }
 
