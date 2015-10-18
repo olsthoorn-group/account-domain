@@ -44,15 +44,15 @@ class Account implements AggregateRoot
     /**
      * Create a new account.
      *
-     * @param AccountId      $accountId
-     * @param Email          $email
-     * @param HashedPassword $hashedPassword
+     * @param AccountId      $id
+     * @param Email          $alias
+     * @param HashedPassword $password
      */
-    private function __construct(AccountId $accountId, Email $email, HashedPassword $hashedPassword)
+    private function __construct(AccountId $id, Email $alias, HashedPassword $password)
     {
-        $this->id = $accountId;
-        $this->alias = $email;
-        $this->password = $hashedPassword;
+        $this->id = $id;
+        $this->alias = $alias;
+        $this->password = $password;
         $this->created_at = DateTime::now();
         $this->update();
     }
@@ -60,15 +60,15 @@ class Account implements AggregateRoot
     /**
      * Create a new account.
      *
-     * @param AccountId      $accountId
-     * @param Email          $email
-     * @param HashedPassword $hashedPassword
+     * @param AccountId      $id
+     * @param Email          $alias
+     * @param HashedPassword $password
      *
      * @return Account
      */
-    public static function create(AccountId $accountId, Email $email, HashedPassword $hashedPassword)
+    public static function create(AccountId $id, Email $alias, HashedPassword $password)
     {
-        return new self($accountId, $email, $hashedPassword);
+        return new self($id, $alias, $password);
     }
 
     /**

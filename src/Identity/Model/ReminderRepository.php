@@ -25,14 +25,14 @@ interface ReminderRepository
     public function add(Reminder $reminder);
 
     /**
-     * Update a new Reminder in the collection.
+     * Update a Reminder in the collection.
      *
      * @param Reminder $reminder
      */
     public function update(Reminder $reminder);
 
     /**
-     * Delete a Reminder by it's ReminderCode.
+     * Delete a Reminder by its ReminderCode.
      *
      * @param ReminderCode $code
      */
