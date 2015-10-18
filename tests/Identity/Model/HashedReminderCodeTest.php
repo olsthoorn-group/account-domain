@@ -9,15 +9,6 @@ class HashedReminderCodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_hashed_reminder_code()
-    {
-        $this->setExpectedException('\Exception');
-        new HashedReminderCode();
-    }
-
-    /**
-     * @test
-     */
     public function it_should_accept_valid_hashed_reminder_code()
     {
         $code = new HashedReminderCode('valid_hashed_reminder_code');

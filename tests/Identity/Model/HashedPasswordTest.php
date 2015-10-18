@@ -9,15 +9,6 @@ class HashedPasswordTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_hashed_password()
-    {
-        $this->setExpectedException('\Exception');
-        new HashedPassword();
-    }
-
-    /**
-     * @test
-     */
     public function it_should_accept_valid_hashed_password()
     {
         $password = new HashedPassword('valid_hashed_password');

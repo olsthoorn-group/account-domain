@@ -9,15 +9,6 @@ class PasswordTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_password()
-    {
-        $this->setExpectedException('\Exception');
-        new Password();
-    }
-
-    /**
-     * @test
-     */
     public function it_should_accept_valid_password()
     {
         $password = new Password('valid_password');

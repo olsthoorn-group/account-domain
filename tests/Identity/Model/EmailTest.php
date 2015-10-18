@@ -9,15 +9,6 @@ class EmailTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_require_email()
-    {
-        $this->setExpectedException('\Exception');
-        new Email();
-    }
-
-    /**
-     * @test
-     */
     public function it_should_accept_valid_email()
     {
         $email = new Email('local@domain.com');
