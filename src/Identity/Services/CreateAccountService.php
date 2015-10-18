@@ -37,16 +37,15 @@ class CreateAccountService
     }
 
     /**
-     * @param $alias
-     * @param $password
+     * Create a new account.
+     *
+     * @param Email    $alias
+     * @param Password $password
      *
      * @return Account
      */
-    public function createAccount($alias, $password)
+    public function createAccount(Email $alias, Password $password)
     {
-        $alias = new Email($alias);
-        $password = new Password($password);
-
         $this->checkAliasIsUnique($alias);
 
         $id = $this->accountRepository->nextIdentity();
@@ -70,7 +69,7 @@ class CreateAccountService
         $specification = new AliasIsUnique($this->accountRepository);
 
         if (!$specification->isSatisfiedBy($alias)) {
-            throw new ValueIsNotUniqueException("$alias is already used");
+            throw new ValueIsNotUniqueException($alias->toString().' is already used');
         }
     }
 }

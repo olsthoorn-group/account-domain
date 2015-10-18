@@ -49,14 +49,12 @@ class ReminderService
     /**
      * Request a password reminder Token.
      *
-     * @param string $alias
+     * @param Email $alias
      *
      * @return Reminder
      */
-    public function request($alias)
+    public function request(Email $alias)
     {
-        $alias = Email::fromString($alias);
-
         // Check if an account exists with that alias
         $this->findAccountByAlias($alias);
 
@@ -96,28 +94,24 @@ class ReminderService
     /**
      * Reset an account password.
      *
-     * @param string $email
-     * @param string $password
-     * @param string $code
+     * @param Email        $alias
+     * @param Password     $password
+     * @param ReminderCode $code
      *
      * @return Account
      *
      * @throws InvalidValueException
      * @throws ValueNotFoundException
      */
-    public function reset($email, $password, $code)
+    public function reset(Email $alias, Password $password, ReminderCode $code)
     {
-        $email = Email::fromString($email);
-        $code = ReminderCode::fromString($code);
-
         // Check if the alias and code combination are valid
-        if ($this->check($email, $code)) {
+        if ($this->check($alias, $code)) {
 
             // Find user belonging to the request
-            $account = $this->findAccountByAlias($email);
+            $account = $this->findAccountByAlias($alias);
 
             // Hash new password
-            $password = new Password($password);
             $hashedPassword = $this->hashingService->hash($password);
 
             // Reset password
@@ -134,20 +128,20 @@ class ReminderService
     /**
      * Attempt to find an account by its alias.
      *
-     * @param Email $email
+     * @param Email $alias
      *
      * @return Account
      *
      * @throws ValueNotFoundException
      */
-    private function findAccountByAlias(Email $email)
+    private function findAccountByAlias(Email $alias)
     {
-        $account = $this->accountRepository->findByAlias($email);
+        $account = $this->accountRepository->findByAlias($alias);
 
         if ($account) {
             return $account;
         }
 
-        throw new ValueNotFoundException($email->toString().' is not a used alias');
+        throw new ValueNotFoundException($alias->toString().' is not a used alias');
     }
 }

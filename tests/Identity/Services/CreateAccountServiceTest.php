@@ -6,7 +6,9 @@ use Mockery as m;
 use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
+use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Account\Domain\Identity\Model\Password;
 use OG\Account\Domain\Identity\Services\CreateAccountService;
 use OG\Account\Domain\Identity\Services\PasswordHashingService;
 use OG\Account\Domain\ValueIsNotUniqueException;
@@ -47,7 +49,10 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(['id' => 1]);
 
-        $this->service->createAccount('local@domain.com', 'password');
+        $alias = new Email('local@domain.com');
+        $password = new Password('password');
+
+        $this->service->createAccount($alias, $password);
     }
 
     /**
@@ -71,7 +76,10 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('add')
             ->once();
 
-        $account = $this->service->createAccount('local@domain.com', 'password');
+        $alias = new Email('local@domain.com');
+        $password = new Password('password');
+
+        $account = $this->service->createAccount($alias, $password);
 
         $this->assertInstanceOf(Account::class, $account);
     }

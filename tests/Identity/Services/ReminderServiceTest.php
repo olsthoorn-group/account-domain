@@ -8,6 +8,7 @@ use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Account\Domain\Identity\Model\Password;
 use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderId;
@@ -74,7 +75,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(null);
 
-        $this->reminderService->request('local@domain.com');
+        $this->reminderService->request(Email::fromString('local@domain.com'));
     }
 
     /**
@@ -97,7 +98,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('add')
             ->once();
 
-        $reminder = $this->reminderService->request('local@domain.com');
+        $reminder = $this->reminderService->request(Email::fromString('local@domain.com'));
 
         $this->assertInstanceOf(Reminder::class, $reminder);
     }
@@ -148,7 +149,11 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(null);
 
-        $this->reminderService->reset('local@domain.com', 'password', '441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865');
+        $this->reminderService->reset(
+            Email::fromString('local@domain.com'),
+            new Password('password'),
+            ReminderCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865')
+        );
     }
 
     /**
@@ -179,7 +184,11 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('deleteByCode')
             ->once();
 
-        $account = $this->reminderService->reset('local@domain.com', 'password', '441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865');
+        $account = $this->reminderService->reset(
+            Email::fromString('local@domain.com'),
+            new Password('password'),
+            ReminderCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865')
+        );
 
         $this->assertInstanceOf(Account::class, $account);
     }
