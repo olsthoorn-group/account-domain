@@ -9,8 +9,6 @@ use OG\Account\Domain\Identity\Model\Password;
 use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 use OG\Account\Domain\Identity\Model\ReminderRepository;
-use OG\Account\Domain\InvalidValueException;
-use OG\Account\Domain\ValueNotFoundException;
 
 /**
  * Service for requesting reminder codes for resetting an account password.
@@ -79,7 +77,7 @@ class ReminderService
      *
      * @return bool
      */
-    public function check(Email $email, ReminderCode $code)
+    public function checkToken(Email $email, ReminderCode $code)
     {
         // TODO: make the check timing attack resistant.
         $reminder = $this->reminderRepository->findByAliasAndCode($email, $code);
@@ -100,13 +98,13 @@ class ReminderService
      *
      * @return Account
      *
-     * @throws InvalidValueException
-     * @throws ValueNotFoundException
+     * @throws ReminderCodeIsInvalid
+     * @throws AliasIsNotFound
      */
     public function reset(Email $alias, Password $password, ReminderCode $code)
     {
         // Check if the alias and code combination are valid
-        if ($this->check($alias, $code)) {
+        if ($this->checkToken($alias, $code)) {
 
             // Find user belonging to the request
             $account = $this->findAccountByAlias($alias);
@@ -132,7 +130,7 @@ class ReminderService
      *
      * @return Account
      *
-     * @throws ValueNotFoundException
+     * @throws AliasIsNotFound
      */
     private function findAccountByAlias(Email $alias)
     {

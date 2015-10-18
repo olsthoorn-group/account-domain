@@ -118,7 +118,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn($this->reminder);
 
-        $this->assertTrue($this->reminderService->check(Email::fromString('local@domain.com'), ReminderCode::generate()));
+        $this->assertTrue($this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate()));
     }
 
     /**
@@ -135,18 +135,45 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn($this->reminder);
 
-        $this->assertFalse($this->reminderService->check(Email::fromString('local@domain.com'), ReminderCode::generate()));
+        $this->assertFalse($this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate()));
     }
 
     /**
      * @test
      */
-    public function it_should_throw_exception_during_reset_attempt_when_email_or_code_are_invalid()
+    public function it_should_throw_exception_during_reset_attempt_when_alias_or_code_are_invalid()
     {
         $this->setExpectedException(ReminderCodeIsInvalid::class);
 
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
+            ->once()
+            ->andReturn(null);
+
+        $this->reminderService->reset(
+            Email::fromString('local@domain.com'),
+            new Password('password'),
+            ReminderCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_throw_exception_during_reset_attempt_when_alias_is_not_found()
+    {
+        $this->setExpectedException(AliasIsNotFound::class);
+
+        $this->reminder
+            ->shouldReceive('getCreatedAt')
+            ->once()
+            ->andReturn(DateTime::now());
+        $this->reminderRepository
+            ->shouldReceive('findByAliasAndCode')
+            ->once()
+            ->andReturn($this->reminder);
+        $this->accountRepository
+            ->shouldReceive('findByAlias')
             ->once()
             ->andReturn(null);
 
