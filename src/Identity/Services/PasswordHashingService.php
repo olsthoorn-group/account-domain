@@ -6,7 +6,7 @@ use OG\Account\Domain\Identity\Model\HashedPassword;
 use OG\Account\Domain\Identity\Model\Password;
 
 /**
- * Hashes and verifies a password.
+ * Hashes and verifies a Password.
  */
 interface PasswordHashingService
 {
