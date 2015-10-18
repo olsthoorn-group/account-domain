@@ -72,7 +72,7 @@ class CreateAccountService
         $specification = new AliasIsUnique($this->accountRepository);
 
         if (!$specification->isSatisfiedBy($alias)) {
-            throw new ValueIsNotUniqueException($alias->toString().' is already used');
+            throw AliasIsAlreadyInUse::withAlias($alias);
         }
     }
 }

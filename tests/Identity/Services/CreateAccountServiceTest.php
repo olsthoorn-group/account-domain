@@ -9,9 +9,9 @@ use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
 use OG\Account\Domain\Identity\Model\Password;
+use OG\Account\Domain\Identity\Services\AliasIsAlreadyInUse;
 use OG\Account\Domain\Identity\Services\CreateAccountService;
 use OG\Account\Domain\Identity\Services\PasswordHashingService;
-use OG\Account\Domain\ValueIsNotUniqueException;
 
 class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,7 +42,7 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_throw_exception_if_email_is_not_unique()
     {
-        $this->setExpectedException(ValueIsNotUniqueException::class);
+        $this->setExpectedException(AliasIsAlreadyInUse::class);
 
         $this->repository
             ->shouldReceive('findByAlias')
