@@ -40,6 +40,36 @@ class CreateAccountServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_should_find_alias_and_it_should_throw_exception_if_email_is_in_use()
+    {
+        $this->repository
+            ->shouldReceive('findByAlias')
+            ->once()
+            ->andReturn(['id' => 1]);
+
+        $alias = new Email('local@domain.com');
+
+        $this->assertFalse($this->service->checkAliasIsUnique($alias));
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_find_reminder_and_return_false_when_invalid()
+    {
+        $this->repository
+            ->shouldReceive('findByAlias')
+            ->once()
+            ->andReturn(null);
+
+        $alias = new Email('local@domain.com');
+
+        $this->assertTrue($this->service->checkAliasIsUnique($alias));
+    }
+
+    /**
+     * @test
+     */
     public function it_should_throw_exception_if_email_is_not_unique()
     {
         $this->setExpectedException(AliasIsAlreadyInUse::class);
