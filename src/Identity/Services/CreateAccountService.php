@@ -7,7 +7,6 @@ use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\AliasIsUnique;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\Password;
-use OG\Account\Domain\ValueIsNotUniqueException;
 
 /**
  * Class CreateAccountService.
@@ -42,12 +41,16 @@ class CreateAccountService
      * @param Email    $alias
      * @param Password $password
      *
+     * @throws AliasIsAlreadyInUse
+     *
      * @return Account
      */
     public function createAccount(Email $alias, Password $password)
     {
         // Check if the requested alias is not already in use
-        $this->checkAliasIsUnique($alias);
+        if (!$this->checkAliasIsUnique($alias)) {
+            throw AliasIsAlreadyInUse::withAlias($alias);
+        }
 
         // Hash password
         $hashedPassword = $this->hashingService->hash($password);
@@ -65,14 +68,12 @@ class CreateAccountService
      *
      * @param Email $alias
      *
-     * @throws ValueIsNotUniqueException
+     * @return bool
      */
-    private function checkAliasIsUnique(Email $alias)
+    public function checkAliasIsUnique(Email $alias)
     {
         $specification = new AliasIsUnique($this->accountRepository);
 
-        if (!$specification->isSatisfiedBy($alias)) {
-            throw AliasIsAlreadyInUse::withAlias($alias);
-        }
+        return $specification->isSatisfiedBy($alias);
     }
 }
