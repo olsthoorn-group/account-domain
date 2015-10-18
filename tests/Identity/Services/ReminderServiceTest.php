@@ -17,6 +17,7 @@ use OG\Account\Domain\Identity\Services\PasswordHashingService;
 use OG\Account\Domain\Identity\Services\ReminderService;
 use OG\Account\Domain\InvalidValueException;
 use OG\Account\Domain\ValueNotFoundException;
+use OG\Core\Domain\Model\DateTime;
 
 class ReminderServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -111,7 +112,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable());
+            ->andReturn(DateTime::now());
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
@@ -128,7 +129,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable('yesterday'));
+            ->andReturn(new DateTime('yesterday'));
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
@@ -164,7 +165,7 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder
             ->shouldReceive('getCreatedAt')
             ->once()
-            ->andReturn(new \DateTimeImmutable());
+            ->andReturn(DateTime::now());
         $this->reminderRepository
             ->shouldReceive('findByAliasAndCode')
             ->once()
