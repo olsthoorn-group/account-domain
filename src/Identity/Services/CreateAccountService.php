@@ -48,19 +48,20 @@ class CreateAccountService
     public function createAccount(Email $alias, Password $password)
     {
         // Check if the requested alias is not already in use
-        if (!$this->checkAliasIsUnique($alias)) {
-            throw AliasIsAlreadyInUse::withAlias($alias);
+        if ($this->checkAliasIsUnique($alias)) {
+
+            // Hash password
+            $hashedPassword = $this->hashingService->hash($password);
+
+            // Create new account
+            $id = $this->accountRepository->nextIdentity();
+            $account = Account::create($id, $alias, $hashedPassword);
+            $this->accountRepository->add($account);
+
+            return $account;
         }
 
-        // Hash password
-        $hashedPassword = $this->hashingService->hash($password);
-
-        // Create new account
-        $id = $this->accountRepository->nextIdentity();
-        $account = Account::create($id, $alias, $hashedPassword);
-        $this->accountRepository->add($account);
-
-        return $account;
+        throw AliasIsAlreadyInUse::withAlias($alias);
     }
 
     /**
