@@ -28,20 +28,27 @@ class ReminderService
     /**
      * @var PasswordHashingService
      */
-    private $hashingService;
+    private $passwordHashingService;
+
+    /**
+     * @var ReminderCodeHashingService
+     */
+    private $codeHashingService;
 
     /**
      * Create a new ReminderService.
      *
-     * @param ReminderRepository     $reminderRepository
-     * @param AccountRepository      $accountRepository
-     * @param PasswordHashingService $hashingService
+     * @param ReminderRepository         $reminderRepository
+     * @param AccountRepository          $accountRepository
+     * @param PasswordHashingService     $passwordHashingService
+     * @param ReminderCodeHashingService $codeHashingService
      */
-    public function __construct(ReminderRepository $reminderRepository, AccountRepository $accountRepository, PasswordHashingService $hashingService)
+    public function __construct(ReminderRepository $reminderRepository, AccountRepository $accountRepository, PasswordHashingService $passwordHashingService, ReminderCodeHashingService $codeHashingService)
     {
         $this->reminderRepository = $reminderRepository;
         $this->accountRepository = $accountRepository;
-        $this->hashingService = $hashingService;
+        $this->passwordHashingService = $passwordHashingService;
+        $this->codeHashingService = $codeHashingService;
     }
 
     /**
@@ -59,11 +66,13 @@ class ReminderService
         // Delete old reminders for this alias
         $this->reminderRepository->deleteExistingRemindersForAlias($alias);
 
-        // TODO: store only a hashed version if the reminder code.
+        // Hash reminder code
+        $code = ReminderCode::generate();
+        $hashedCode = $this->codeHashingService->hash($code);
 
         // Create new reminder
         $id = $this->reminderRepository->nextIdentity();
-        $reminder = Reminder::request($id, $alias, ReminderCode::generate());
+        $reminder = Reminder::request($id, $alias, $code, $hashedCode);
         $this->reminderRepository->add($reminder);
 
         return $reminder;
@@ -72,21 +81,33 @@ class ReminderService
     /**
      * Check to see if the email and token combination are valid.
      *
-     * @param Email        $email
+     * @param Email        $alias
      * @param ReminderCode $code
      *
-     * @return bool
+     * @throws ReminderIsNotFound
+     * @throws ReminderCodeIsInvalid
+     * @throws ReminderTimedOut
      */
-    public function checkToken(Email $email, ReminderCode $code)
+    public function checkToken(Email $alias, ReminderCode $code)
     {
-        // TODO: make the check timing attack resistant.
-        $reminder = $this->reminderRepository->findByAliasAndCode($email, $code);
+        // Find the reminder in the collection
+        $reminder = $this->findReminderByAlias($alias);
 
-        if ($reminder && $reminder->isValid()) {
-            return true;
+        // Get the reminder code
+        $hashedCode = $reminder->getCode();
+
+        // Verify that the reminder code is valid
+        if ($this->codeHashingService->verify($code, $hashedCode)) {
+
+            // Verify the reminder is valid
+            if ($reminder->isValid()) {
+                return;
+            }
+
+            throw ReminderTimedOut::withReminderCode($code);
         }
 
-        return false;
+        throw ReminderCodeIsInvalid::withReminderCode($code);
     }
 
     /**
@@ -98,29 +119,28 @@ class ReminderService
      *
      * @return Account
      *
+     * @throws ReminderIsNotFound
      * @throws ReminderCodeIsInvalid
+     * @throws ReminderTimedOut
      * @throws AliasIsNotFound
      */
     public function reset(Email $alias, Password $password, ReminderCode $code)
     {
         // Check if the alias and code combination are valid
-        if ($this->checkToken($alias, $code)) {
+        $this->checkToken($alias, $code);
 
-            // Find user belonging to the request
-            $account = $this->findAccountByAlias($alias);
+        // Find the user belonging to the request
+        $account = $this->findAccountByAlias($alias);
 
-            // Hash new password
-            $hashedPassword = $this->hashingService->hash($password);
+        // Hash new password
+        $hashedPassword = $this->passwordHashingService->hash($password);
 
-            // Reset password
-            $account->resetPassword($hashedPassword);
-            $this->accountRepository->update($account);
-            $this->reminderRepository->deleteByCode($code);
+        // Reset password
+        $account->resetPassword($hashedPassword);
+        $this->accountRepository->update($account);
+        $this->reminderRepository->deleteByCode($code);
 
-            return $account;
-        }
-
-        throw ReminderCodeIsInvalid::withReminderCode($code);
+        return $account;
     }
 
     /**
@@ -141,5 +161,25 @@ class ReminderService
         }
 
         throw AliasIsNotFound::withAlias($alias);
+    }
+
+    /**
+     * Attempt to find a reminder by its alias.
+     *
+     * @param Email $alias
+     *
+     * @return Reminder
+     *
+     * @throws ReminderIsNotFound
+     */
+    private function findReminderByAlias(Email $alias)
+    {
+        $reminder = $this->reminderRepository->findByAlias($alias);
+
+        if ($reminder) {
+            return $reminder;
+        }
+
+        throw ReminderIsNotFound::withAlias($alias);
     }
 }
