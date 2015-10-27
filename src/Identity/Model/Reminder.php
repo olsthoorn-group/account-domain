@@ -110,7 +110,7 @@ class Reminder implements AggregateRoot
     /**
      * Return when the reminder was created.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getCreatedAt()
     {
