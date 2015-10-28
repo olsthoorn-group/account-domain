@@ -24,6 +24,8 @@ class ReminderCode implements ValueObject
     private function __construct($value)
     {
         // TODO: Add extra tests for this assertion.
+        // TODO: assert hexadecimal
+        // TODO: make lower case
         \Assert\That($value)
             ->string('Argument has to be a string')
             ->length(static::RANDOM_BYTES_SIZE * 2, 'ReminderCode has to be '.static::RANDOM_BYTES_SIZE * 2 .' characters long');
