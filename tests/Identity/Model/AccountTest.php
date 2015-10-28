@@ -4,6 +4,7 @@ namespace OG\Account\Tests\Domain\Identity\Model;
 
 use OG\Account\Domain\Identity\Model\Account;
 use OG\Account\Domain\Identity\Model\AccountId;
+use OG\Account\Domain\Identity\Model\AccountIsLocked;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
 use OG\Core\Domain\Model\DateTime;
@@ -49,6 +50,10 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->password->equals($account->getPassword()));
         $this->assertEquals($creation_time, $account->getCreatedAt());
         $this->assertEquals($creation_time, $account->getUpdatedAt());
+        $this->assertFalse($account->isLocked());
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertFalse($account->isEnabled());
         $this->assertEquals(0, count($account->releaseEvents()));
 
         return $account;
@@ -63,7 +68,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     public function it_should_reset_password($account)
     {
         $updated_time = new DateTime('tomorrow');
-        $newPassword = new HashedPassword('newPassword');
+        $newPassword = new HashedPassword('new_password');
 
         DateTime::setTestDateTime($updated_time);
         $account->resetPassword($newPassword);
@@ -72,6 +77,144 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($account->releaseEvents()));
         $this->assertEquals($newPassword, $account->getPassword());
         $this->assertEquals($updated_time, $account->getUpdatedAt());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_not_reset_password_when_locked()
+    {
+        $this->setExpectedException(AccountIsLocked::class);
+
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $account->lockHard();
+        $newPassword = new HashedPassword('new_password');
+
+        $account->resetPassword($newPassword);
+    }
+
+    /**
+     * @test
+     *
+     * @return Account
+     */
+    public function it_should_lock_soft()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+
+        $account->lockSoft(new DateTime('tomorrow'));
+
+        $this->assertTrue($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertTrue($account->isLocked());
+
+        return $account;
+    }
+
+    /**
+     * @test
+     *
+     * @return Account
+     */
+    public function it_should_lock_hard()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+
+        $account->lockHard();
+
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertTrue($account->isHardLocked());
+        $this->assertTrue($account->isLocked());
+
+        return $account;
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_unlock()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $account->lockSoft(new DateTime('tomorrow'));
+        $account->lockHard();
+
+        $account->unlock();
+
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertFalse($account->isLocked());
+    }
+
+    /**
+     * @test
+     * @depends it_should_lock_soft
+     *
+     * @param Account $account
+     */
+    public function it_should_unlock_soft($account)
+    {
+        $account->unlock();
+
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertFalse($account->isLocked());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_unlock_soft_when_lock_time_has_passed()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $account->lockSoft(new DateTime('tomorrow'));
+
+        DateTime::setTestDateTime(new DateTime('tomorrow'));
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertFalse($account->isLocked());
+        DateTime::clearTestDateTime();
+    }
+
+    /**
+     * @test
+     * @depends it_should_lock_hard
+     *
+     * @param Account $account
+     */
+    public function it_should_unlock_hard($account)
+    {
+        $account->unlock();
+
+        $this->assertFalse($account->isSoftLocked());
+        $this->assertFalse($account->isHardLocked());
+        $this->assertFalse($account->isLocked());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_enable()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $this->assertFalse($account->isEnabled());
+
+        $account->enable();
+
+        $this->assertTrue($account->isEnabled());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_disable()
+    {
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $account->enable();
+        $this->assertTrue($account->isEnabled());
+
+        $account->disable();
+
+        $this->assertFalse($account->isEnabled());
     }
 
     /**
