@@ -5,7 +5,6 @@ namespace OG\Account\Domain\Identity\Model;
 use OG\Account\Domain\Identity\Events\PasswordWasReset;
 use OG\Core\Domain\AggregateRoot;
 use OG\Core\Domain\Entity;
-use OG\Core\Domain\Identifier;
 use OG\Core\Domain\Model\DateTime;
 use OG\Core\Domain\RecordsEvents;
 
@@ -42,6 +41,21 @@ class Account implements AggregateRoot
     private $created_at;
 
     /**
+     * @var DateTime
+     */
+    private $soft_locked;
+
+    /**
+     * @var bool
+     */
+    private $hard_locked;
+
+    /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
      * Create a new account.
      *
      * @param AccountId      $id
@@ -54,6 +68,9 @@ class Account implements AggregateRoot
         $this->alias = $alias;
         $this->password = $password;
         $this->created_at = DateTime::now();
+        $this->soft_locked = DateTime::now();
+        $this->hard_locked = false;
+        $this->enabled = false;
         $this->update();
     }
 
@@ -72,9 +89,70 @@ class Account implements AggregateRoot
     }
 
     /**
+     * Reset the password.
+     *
+     * @param HashedPassword $password
+     */
+    public function resetPassword(HashedPassword $password)
+    {
+        if (!$this->isLocked()) {
+            $this->password = $password;
+            $this->recordThat(new PasswordWasReset());
+            $this->update();
+
+            return;
+        }
+
+        throw AccountIsLocked::withId($this->getId());
+    }
+
+    /**
+     * Lock the account using a soft lock.
+     *
+     * @param DateTime $lockUntil
+     */
+    public function lockSoft(DateTime $lockUntil)
+    {
+        $this->soft_locked = $lockUntil;
+    }
+
+    /**
+     * Lock the account using a hard lock.
+     */
+    public function lockHard()
+    {
+        $this->hard_locked = true;
+    }
+
+    /**
+     * Unlock the account.
+     */
+    public function unlock()
+    {
+        $this->soft_locked = DateTime::now();
+        $this->hard_locked = false;
+    }
+
+    /**
+     * Enable the account.
+     */
+    public function enable()
+    {
+        $this->enabled = true;
+    }
+
+    /**
+     * Disable the account.
+     */
+    public function disable()
+    {
+        $this->enabled = false;
+    }
+
+    /**
      * Return the entity identifier.
      *
-     * @return Identifier
+     * @return AccountId
      */
     public function getId()
     {
@@ -122,15 +200,41 @@ class Account implements AggregateRoot
     }
 
     /**
-     * Reset the password.
+     * Check if the account is locked.
      *
-     * @param HashedPassword $password
+     * @return bool
      */
-    public function resetPassword(HashedPassword $password)
+    public function isLocked()
     {
-        $this->password = $password;
-        $this->recordThat(new PasswordWasReset());
-        $this->update();
+        return $this->isSoftLocked() || $this->isHardLocked();
+    }
+
+    /**
+     * Check if the account is soft-locked.
+     *
+     * @return bool
+     */
+    public function isSoftLocked()
+    {
+        return $this->soft_locked > DateTime::now();
+    }
+
+    /**
+     * Check if the account is hard-locked.
+     *
+     * @return bool
+     */
+    public function isHardLocked()
+    {
+        return $this->hard_locked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 
     /**

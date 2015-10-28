@@ -5,13 +5,13 @@ namespace OG\Account\Domain\Identity\Services;
 use OG\Account\Domain\Identity\Model\ReminderCode;
 
 /**
- * Thrown when a ReminderCode is invalid.
+ * Thrown when a reminder timed out.
  */
-class ReminderCodeIsInvalid extends ReminderOfAccountFailed
+class ReminderTimedOut extends ReminderOfAccountFailed
 {
     public static function withReminderCode(ReminderCode $code)
     {
-        $message = sprintf('ReminderCode `%s` is invalid', $code->toString());
+        $message = sprintf('ReminderCode `%s` timed out', $code->toString());
 
         return new self($message);
     }

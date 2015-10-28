@@ -9,6 +9,8 @@ use OG\Core\Domain\ValueObject;
  */
 class Password implements ValueObject
 {
+    // TODO: add password changed property
+
     /**
      * @var string
      */
@@ -21,6 +23,7 @@ class Password implements ValueObject
      */
     public function __construct($value)
     {
+        // TODO: assert password complexity
         \Assert\that($value)
             ->string('Argument has to be a string')
             ->betweenLength(8, 100, 'Password has to be 8 to 100 characters long');

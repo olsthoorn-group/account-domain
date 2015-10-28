@@ -8,14 +8,13 @@ namespace OG\Account\Domain\Identity\Model;
 interface ReminderRepository
 {
     /**
-     * Find a Reminder by Alias and Code.
+     * Find a Reminder by Alias.
      *
-     * @param Email        $email
-     * @param ReminderCode $code
+     * @param Email $alias
      *
      * @return Reminder|null Reminder object or null if it can't be found
      */
-    public function findByAliasAndCode(Email $email, ReminderCode $code);
+    public function findByAlias(Email $alias);
 
     /**
      * Add a new Reminder to the collection.

@@ -8,6 +8,7 @@ use OG\Account\Domain\Identity\Model\AccountId;
 use OG\Account\Domain\Identity\Model\AccountRepository;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedPassword;
+use OG\Account\Domain\Identity\Model\HashedReminderCode;
 use OG\Account\Domain\Identity\Model\Password;
 use OG\Account\Domain\Identity\Model\Reminder;
 use OG\Account\Domain\Identity\Model\ReminderCode;
@@ -15,9 +16,11 @@ use OG\Account\Domain\Identity\Model\ReminderId;
 use OG\Account\Domain\Identity\Model\ReminderRepository;
 use OG\Account\Domain\Identity\Services\AliasIsNotFound;
 use OG\Account\Domain\Identity\Services\PasswordHashingService;
+use OG\Account\Domain\Identity\Services\ReminderCodeHashingService;
 use OG\Account\Domain\Identity\Services\ReminderCodeIsInvalid;
+use OG\Account\Domain\Identity\Services\ReminderIsNotFound;
 use OG\Account\Domain\Identity\Services\ReminderService;
-use OG\Core\Domain\Model\DateTime;
+use OG\Account\Domain\Identity\Services\ReminderTimedOut;
 
 class ReminderServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +47,12 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @var PasswordHashingService|\Mockery\Mock
      */
-    private $hashingService;
+    private $passwordHashingService;
+
+    /**
+     * @var ReminderCodeHashingService|\Mockery\Mock
+     */
+    private $codeHashingService;
 
     /**
      * @var ReminderService
@@ -61,8 +69,9 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminder = m::mock(Reminder::class)->makePartial();
         $this->reminderRepository = m::mock(ReminderRepository::class);
         $this->accountRepository = m::mock(AccountRepository::class);
-        $this->hashingService = m::mock(PasswordHashingService::class);
-        $this->reminderService = new ReminderService($this->reminderRepository, $this->accountRepository, $this->hashingService);
+        $this->passwordHashingService = m::mock(PasswordHashingService::class);
+        $this->codeHashingService = m::mock(ReminderCodeHashingService::class);
+        $this->reminderService = new ReminderService($this->reminderRepository, $this->accountRepository, $this->passwordHashingService, $this->codeHashingService);
     }
     /**
      * @test
@@ -91,6 +100,10 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->reminderRepository
             ->shouldReceive('deleteExistingRemindersForAlias')
             ->once();
+        $this->codeHashingService
+            ->shouldReceive('hash')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
         $this->reminderRepository
             ->shouldReceive('nextIdentity')
             ->once()
@@ -107,35 +120,91 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_find_reminder_and_return_true_when_valid()
+    public function it_should_find_reminder_and_return_when_valid()
     {
-        $this->reminder
-            ->shouldReceive('getCreatedAt')
-            ->once()
-            ->andReturn(DateTime::now());
         $this->reminderRepository
-            ->shouldReceive('findByAliasAndCode')
+            ->shouldReceive('findByAlias')
             ->once()
             ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(true);
+        $this->reminder
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
 
-        $this->assertTrue($this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate()));
+        $this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate());
     }
 
     /**
      * @test
      */
-    public function it_should_find_reminder_and_return_false_when_invalid()
+    public function it_should_find_reminder_and_throw_exception_when_reminder_is_not_found()
     {
-        $this->reminder
-            ->shouldReceive('getCreatedAt')
-            ->once()
-            ->andReturn(new DateTime('yesterday'));
+        $this->setExpectedException(ReminderIsNotFound::class);
+
         $this->reminderRepository
-            ->shouldReceive('findByAliasAndCode')
+            ->shouldReceive('findByAlias')
+            ->once()
+            ->andReturn(null);
+
+        $this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_find_reminder_and_throw_exception_when_reminder_code_is_invalid()
+    {
+        $this->setExpectedException(ReminderCodeIsInvalid::class);
+
+        $this->reminderRepository
+            ->shouldReceive('findByAlias')
             ->once()
             ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(false);
 
-        $this->assertFalse($this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate()));
+        $this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_find_reminder_and_throw_exception_when_reminder_timed_out()
+    {
+        $this->setExpectedException(ReminderTimedOut::class);
+
+        $this->reminderRepository
+            ->shouldReceive('findByAlias')
+            ->once()
+            ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(true);
+        $this->reminder
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(false);
+
+        $this->reminderService->checkToken(Email::fromString('local@domain.com'), ReminderCode::generate());
     }
 
     /**
@@ -146,9 +215,17 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(ReminderCodeIsInvalid::class);
 
         $this->reminderRepository
-            ->shouldReceive('findByAliasAndCode')
+            ->shouldReceive('findByAlias')
             ->once()
-            ->andReturn(null);
+            ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(false);
 
         $this->reminderService->reset(
             Email::fromString('local@domain.com'),
@@ -164,14 +241,22 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(AliasIsNotFound::class);
 
-        $this->reminder
-            ->shouldReceive('getCreatedAt')
-            ->once()
-            ->andReturn(DateTime::now());
         $this->reminderRepository
-            ->shouldReceive('findByAliasAndCode')
+            ->shouldReceive('findByAlias')
             ->once()
             ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(true);
+        $this->reminder
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
         $this->accountRepository
             ->shouldReceive('findByAlias')
             ->once()
@@ -189,19 +274,27 @@ class ReminderServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_reset_password_and_return_user()
     {
-        $this->reminder
-            ->shouldReceive('getCreatedAt')
-            ->once()
-            ->andReturn(DateTime::now());
         $this->reminderRepository
-            ->shouldReceive('findByAliasAndCode')
+            ->shouldReceive('findByAlias')
             ->once()
             ->andReturn($this->reminder);
+        $this->reminder
+            ->shouldReceive('getCode')
+            ->once()
+            ->andReturn(new HashedReminderCode('valid_reminder_code'));
+        $this->codeHashingService
+            ->shouldReceive('verify')
+            ->once()
+            ->andReturn(true);
+        $this->reminder
+            ->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
         $this->accountRepository
             ->shouldReceive('findByAlias')
             ->once()
             ->andReturn($this->account);
-        $this->hashingService
+        $this->passwordHashingService
             ->shouldReceive('hash')
             ->once()
             ->andReturn(new HashedPassword('password'));

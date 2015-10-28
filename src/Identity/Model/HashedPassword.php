@@ -21,6 +21,7 @@ class HashedPassword implements ValueObject
      */
     public function __construct($value)
     {
+        // TODO: assert min and max size for different hashing schemes
         \Assert\that($value)
             ->string('Argument has to be a string');
 

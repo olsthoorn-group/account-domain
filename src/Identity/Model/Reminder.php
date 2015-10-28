@@ -24,10 +24,10 @@ class Reminder implements AggregateRoot
     /**
      * @var Email
      */
-    private $email;
+    private $alias;
 
     /**
-     * @var ReminderCode
+     * @var HashedReminderCode
      */
     private $code;
 
@@ -39,32 +39,34 @@ class Reminder implements AggregateRoot
     /**
      * Create a new Reminder.
      *
-     * @param ReminderId   $id
-     * @param Email        $email
-     * @param ReminderCode $code
+     * @param ReminderId         $id
+     * @param Email              $alias
+     * @param ReminderCode       $code
+     * @param HashedReminderCode $hashedCode
      */
-    private function __construct(ReminderId $id, Email $email, ReminderCode $code)
+    private function __construct(ReminderId $id, Email $alias, ReminderCode $code, HashedReminderCode $hashedCode)
     {
         $this->id = $id;
-        $this->email = $email;
-        $this->code = $code;
+        $this->alias = $alias;
+        $this->code = $hashedCode;
         $this->created_at = DateTime::now();
 
-        $this->recordThat(new ReminderWasCreated());
+        $this->recordThat(new ReminderWasCreated($code));
     }
 
     /**
      * Create a new Reminder.
      *
-     * @param ReminderId   $id
-     * @param Email        $email
-     * @param ReminderCode $code
+     * @param ReminderId         $id
+     * @param Email              $alias
+     * @param ReminderCode       $code
+     * @param HashedReminderCode $hashedCode
      *
      * @return Reminder
      */
-    public static function request(ReminderId $id, Email $email, ReminderCode $code)
+    public static function request(ReminderId $id, Email $alias, ReminderCode $code, HashedReminderCode $hashedCode)
     {
-        return new self($id, $email, $code);
+        return new self($id, $alias, $code, $hashedCode);
     }
 
     /**
@@ -88,19 +90,19 @@ class Reminder implements AggregateRoot
     }
 
     /**
-     * Return the reminder email.
+     * Return the account alias.
      *
      * @return Email
      */
-    public function getEmail()
+    public function getAlias()
     {
-        return $this->email;
+        return $this->alias;
     }
 
     /**
      * Return the reminder code.
      *
-     * @return ReminderCode
+     * @return HashedReminderCode
      */
     public function getCode()
     {
@@ -110,7 +112,7 @@ class Reminder implements AggregateRoot
     /**
      * Return when the reminder was created.
      *
-     * @return \DateTimeImmutable
+     * @return DateTime
      */
     public function getCreatedAt()
     {

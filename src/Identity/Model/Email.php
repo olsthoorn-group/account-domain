@@ -21,6 +21,7 @@ class Email implements ValueObject
      */
     public function __construct($value)
     {
+        // TODO: determine case-sensitive assertion
         \Assert\that($value)
             ->string('Argument has to be a string')
             ->email('String has to be an email')
