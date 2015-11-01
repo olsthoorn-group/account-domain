@@ -12,6 +12,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Service to create accounts
 - Reminder entity and containing value objects
 - Service to request a reminder for a password reset
+- Activation entity and containing value objects
+- Service to hash activation codes 
+- Service to request an activation for the account
 
 ### Changed
 - Nothing
