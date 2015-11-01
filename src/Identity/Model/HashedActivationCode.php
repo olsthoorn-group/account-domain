@@ -7,7 +7,7 @@ use OG\Core\Domain\ValueObject;
 /**
  * HashedActivationCode value object to represent a random activation code that is hashed in the application domain.
  */
-class HashedActivationCode implements  ValueObject
+class HashedActivationCode implements ValueObject
 {
     /**
      * @var string

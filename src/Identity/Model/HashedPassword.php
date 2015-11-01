@@ -9,6 +9,7 @@ use OG\Core\Domain\ValueObject;
  */
 class HashedPassword implements ValueObject
 {
+    // TODO: Add password_changed_at property
     /**
      * @var string
      */
@@ -21,7 +22,6 @@ class HashedPassword implements ValueObject
      */
     public function __construct($value)
     {
-        // TODO: assert min and max size for different hashing schemes
         \Assert\that($value)
             ->string('Argument has to be a string');
 
