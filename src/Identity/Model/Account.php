@@ -2,6 +2,7 @@
 
 namespace OG\Account\Domain\Identity\Model;
 
+use OG\Account\Domain\Identity\Events\AccountWasActivated;
 use OG\Account\Domain\Identity\Events\PasswordWasReset;
 use OG\Core\Domain\AggregateRoot;
 use OG\Core\Domain\Entity;
@@ -98,6 +99,22 @@ class Account implements AggregateRoot
         if (!$this->isLocked()) {
             $this->password = $password;
             $this->recordThat(new PasswordWasReset());
+            $this->update();
+
+            return;
+        }
+
+        throw AccountIsLocked::withId($this->getId());
+    }
+
+    /**
+     * Activate the account.
+     */
+    public function activate()
+    {
+        if (!$this->isLocked()) {
+            $this->enabled = true;
+            $this->recordThat(new AccountWasActivated());
             $this->update();
 
             return;

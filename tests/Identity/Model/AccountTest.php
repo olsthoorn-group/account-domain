@@ -95,6 +95,37 @@ class AccountTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @depends it_should_create_new_account
+     *
+     * @param Account $account
+     */
+    public function it_should_activate_account($account)
+    {
+        $updated_time = new DateTime('tomorrow');
+
+        DateTime::setTestDateTime($updated_time);
+        $account->activate();
+        DateTime::clearTestDateTime();
+
+        $this->assertEquals(1, count($account->releaseEvents()));
+        $this->assertEquals($updated_time, $account->getUpdatedAt());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_not_activate_account_when_locked()
+    {
+        $this->setExpectedException(AccountIsLocked::class);
+
+        $account = Account::create($this->accountId, $this->email, $this->password);
+        $account->lockHard();
+
+        $account->activate();
+    }
+
+    /**
+     * @test
      *
      * @return Account
      */
