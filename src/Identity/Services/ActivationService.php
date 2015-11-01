@@ -33,7 +33,7 @@ class ActivationService
      * Create a new ActivationService.
      *
      * @param ActivationRepository         $activationRepository
-     * @param AccountRepository          $accountRepository
+     * @param AccountRepository            $accountRepository
      * @param ActivationCodeHashingService $codeHashingService
      */
     public function __construct(ActivationRepository $activationRepository, AccountRepository $accountRepository, ActivationCodeHashingService $codeHashingService)
@@ -73,7 +73,7 @@ class ActivationService
     /**
      * Check to see if the email and token combination are valid.
      *
-     * @param Email        $alias
+     * @param Email          $alias
      * @param ActivationCode $code
      *
      * @throws ActivationIsNotFound
@@ -105,7 +105,7 @@ class ActivationService
     /**
      * Activate an account.
      *
-     * @param Email        $alias
+     * @param Email          $alias
      * @param ActivationCode $code
      *
      * @return Account

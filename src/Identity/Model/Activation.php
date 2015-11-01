@@ -40,7 +40,7 @@ class Activation implements AggregateRoot
      * Create a new Activation.
      *
      * @param ActivationId         $id
-     * @param Email              $alias
+     * @param Email                $alias
      * @param ActivationCode       $code
      * @param HashedActivationCode $hashedCode
      */
@@ -58,7 +58,7 @@ class Activation implements AggregateRoot
      * Create a new Activation.
      *
      * @param ActivationId         $id
-     * @param Email              $alias
+     * @param Email                $alias
      * @param ActivationCode       $code
      * @param HashedActivationCode $hashedCode
      *
