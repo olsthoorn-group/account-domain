@@ -152,7 +152,7 @@ class ActivationService
     }
 
     /**
-     * Attempt to find a activation by its alias.
+     * Attempt to find an activation by its alias.
      *
      * @param Email $alias
      *
