@@ -54,7 +54,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($account->isSoftLocked());
         $this->assertFalse($account->isHardLocked());
         $this->assertFalse($account->isEnabled());
-        $this->assertEquals(0, count($account->releaseEvents()));
+        $this->assertEquals(1, count($account->releaseEvents()));
 
         return $account;
     }
