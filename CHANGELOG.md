@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Activation entity and containing value objects
 - Service to hash activation codes 
 - Service to request an activation for the account
+- Added commands to call the different use-cases 
 
 ### Changed
 - Nothing
