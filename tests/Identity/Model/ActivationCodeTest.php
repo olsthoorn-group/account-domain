@@ -52,7 +52,7 @@ class ActivationCodeTest extends \PHPUnit_Framework_TestCase
     public function it_should_require_hexadecimals()
     {
         $this->setExpectedException('Assert\AssertionFailedException');
-        ActivationCode::fromString('invalid_hexadecimal');
+        ActivationCode::fromString('invalid_hexadecimal_that_is_64_characters_long_aaaaaaaaaaaaaaaaa');
     }
 
     /**
@@ -71,6 +71,16 @@ class ActivationCodeTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Assert\AssertionFailedException');
         ActivationCode::fromString('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd86583');
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_allow_upper_case()
+    {
+        $code = ActivationCode::fromString('441750964B8CA7B4B55B7A1F69A15275E7902C39E824D89ECBF674A12E4DD865');
+
+        $this->assertEquals('441750964b8ca7b4b55b7a1f69a15275e7902c39e824d89ecbf674a12e4dd865', (string) $code);
     }
 
     /**
