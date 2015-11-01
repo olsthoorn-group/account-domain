@@ -23,14 +23,12 @@ class ReminderCode implements ValueObject
      */
     private function __construct($value)
     {
-        // TODO: Add extra tests for this assertion.
-        // TODO: assert hexadecimal
-        // TODO: make lower case
-        \Assert\That($value)
+        \Assert\that($value)
             ->string('Argument has to be a string')
+            ->regex('/^[0-9A-Fa-f]*$/', 'String has to be hexadecimal')
             ->length(static::RANDOM_BYTES_SIZE * 2, 'ReminderCode has to be '.static::RANDOM_BYTES_SIZE * 2 .' characters long');
 
-        $this->value = $value;
+        $this->value = strtolower($value);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace OG\Account\Domain\Identity\Model;
 
 use OG\Account\Domain\Identity\Events\AccountWasActivated;
+use OG\Account\Domain\Identity\Events\AccountWasCreated;
 use OG\Account\Domain\Identity\Events\PasswordWasReset;
 use OG\Core\Domain\AggregateRoot;
 use OG\Core\Domain\Entity;
@@ -73,6 +74,8 @@ class Account implements AggregateRoot
         $this->hard_locked = false;
         $this->enabled = false;
         $this->update();
+
+        $this->recordThat(new AccountWasCreated($id, $alias));
     }
 
     /**
@@ -98,7 +101,7 @@ class Account implements AggregateRoot
     {
         if (!$this->isLocked()) {
             $this->password = $password;
-            $this->recordThat(new PasswordWasReset());
+            $this->recordThat(new PasswordWasReset($this->getId(), $this->getAlias()));
             $this->update();
 
             return;
@@ -114,7 +117,7 @@ class Account implements AggregateRoot
     {
         if (!$this->isLocked()) {
             $this->enabled = true;
-            $this->recordThat(new AccountWasActivated());
+            $this->recordThat(new AccountWasActivated($this->getId(), $this->getAlias()));
             $this->update();
 
             return;

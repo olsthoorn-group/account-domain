@@ -7,7 +7,7 @@ use OG\Core\Domain\ValueObject;
 /**
  * HashedReminderCode value object to represent a random reminder code that is hashed in the application domain.
  */
-class HashedReminderCode implements  ValueObject
+class HashedReminderCode implements ValueObject
 {
     /**
      * @var string
@@ -21,7 +21,6 @@ class HashedReminderCode implements  ValueObject
      */
     public function __construct($value)
     {
-        // TODO: determine min and max size for different hashing schemes
         \Assert\that($value)
             ->string('Argument has to be a string');
 

@@ -7,17 +7,14 @@ use OG\Account\Domain\Identity\Model\Email;
 use OG\Core\Domain\DomainEvent;
 use OG\Core\Domain\Model\DateTime;
 
-/**
- * Event fired when a password was reset.
- */
-class PasswordWasReset implements DomainEvent
+class AccountWasCreated implements DomainEvent
 {
     public $accountId;
     public $accountAlias;
     public $happened_at;
 
     /**
-     * PasswordWasReset constructor.
+     * AccountWasCreated constructor.
      *
      * @param AccountId $id
      * @param Email     $alias

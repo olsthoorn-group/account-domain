@@ -9,8 +9,6 @@ use OG\Core\Domain\ValueObject;
  */
 class Password implements ValueObject
 {
-    // TODO: add password changed property
-
     /**
      * @var string
      */
