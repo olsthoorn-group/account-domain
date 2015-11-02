@@ -12,8 +12,19 @@ use OG\Core\Domain\Model\DateTime;
  */
 class PasswordWasReset implements DomainEvent
 {
+    /**
+     * @var AccountId
+     */
     public $accountId;
+
+    /**
+     * @var Email
+     */
     public $accountAlias;
+
+    /**
+     * @var DateTime
+     */
     public $happened_at;
 
     /**
