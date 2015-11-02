@@ -11,7 +11,14 @@ use OG\Core\Domain\Model\DateTime;
  */
 class ActivationWasCreated implements DomainEvent
 {
+    /**
+     * @var ActivationCode
+     */
     public $activationCode;
+
+    /**
+     * @var DateTime
+     */
     public $happened_at;
 
     /**

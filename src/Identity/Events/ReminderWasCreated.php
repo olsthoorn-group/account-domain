@@ -11,7 +11,14 @@ use OG\Core\Domain\Model\DateTime;
  */
 class ReminderWasCreated implements DomainEvent
 {
+    /**
+     * @var ReminderCode
+     */
     public $reminderCode;
+
+    /**
+     * @var DateTime
+     */
     public $happened_at;
 
     /**

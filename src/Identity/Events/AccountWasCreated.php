@@ -9,8 +9,19 @@ use OG\Core\Domain\Model\DateTime;
 
 class AccountWasCreated implements DomainEvent
 {
+    /**
+     * @var AccountId
+     */
     public $accountId;
+
+    /**
+     * @var Email
+     */
     public $accountAlias;
+
+    /**
+     * @var DateTime
+     */
     public $happened_at;
 
     /**
