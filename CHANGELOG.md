@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Service to hash activation codes 
 - Service to request an activation for the account
 - Service to change passwords
+- Service to delete accounts
 - Added commands to call the different use-cases 
 
 ### Changed
