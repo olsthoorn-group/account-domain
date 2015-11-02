@@ -9,7 +9,7 @@ use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\Password;
 
 /**
- * Class CreateAccountService.
+ * Service for creating an account.
  */
 class CreateAccountService
 {
