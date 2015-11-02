@@ -24,12 +24,6 @@ Via Composer
 $ composer require og/account-domain
 ```
 
-## Usage
-
-``` php
-$skeleton = new OG\Skeleton();
-```
-
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
