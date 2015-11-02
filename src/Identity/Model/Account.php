@@ -5,6 +5,7 @@ namespace OG\Account\Domain\Identity\Model;
 use OG\Account\Domain\Identity\Events\AccountWasActivated;
 use OG\Account\Domain\Identity\Events\AccountWasCreated;
 use OG\Account\Domain\Identity\Events\PasswordWasReset;
+use OG\Account\Domain\Identity\Events\PasswordWasUpdated;
 use OG\Core\Domain\AggregateRoot;
 use OG\Core\Domain\Entity;
 use OG\Core\Domain\Model\DateTime;
@@ -96,6 +97,8 @@ class Account implements AggregateRoot
      * Reset the password.
      *
      * @param HashedPassword $password
+     *
+     * @throws AccountIsLocked
      */
     public function resetPassword(HashedPassword $password)
     {
@@ -112,12 +115,34 @@ class Account implements AggregateRoot
 
     /**
      * Activate the account.
+     *
+     * @throws AccountIsLocked
      */
     public function activate()
     {
         if (!$this->isLocked()) {
             $this->enabled = true;
             $this->recordThat(new AccountWasActivated($this->getId(), $this->getAlias()));
+            $this->update();
+
+            return;
+        }
+
+        throw AccountIsLocked::withId($this->getId());
+    }
+
+    /**
+     * Change the password.
+     *
+     * @param HashedPassword $hashedPassword
+     *
+     * @throws AccountIsLocked
+     */
+    public function changePassword(HashedPassword $hashedPassword)
+    {
+        if (!$this->isLocked()) {
+            $this->password = $hashedPassword;
+            $this->recordThat(new PasswordWasUpdated($this->getId(), $this->getAlias()));
             $this->update();
 
             return;
