@@ -6,7 +6,7 @@ use OG\Account\Domain\Identity\Model\ActivationCode;
 use OG\Account\Domain\Identity\Model\HashedActivationCode;
 
 /**
- * Hashes and verifies a ActivationCode.
+ * Hashes and verifies an ActivationCode.
  */
 interface ActivationCodeHashingService
 {

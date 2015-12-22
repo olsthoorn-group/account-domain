@@ -28,9 +28,9 @@ class HashedActivationCode implements ValueObject
     }
 
     /**
-     * Creates a activation code object from a string representation.
+     * Creates an activation code object from a string representation.
      *
-     * @param string $string a activation code
+     * @param string $string an activation code
      *
      * @return static
      */

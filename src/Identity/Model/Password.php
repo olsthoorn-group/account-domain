@@ -30,7 +30,7 @@ class Password implements ValueObject
     }
 
     /**
-     * Creates an password object from a string.
+     * Creates a password object from a string.
      *
      * @param string $string A password with a length between 8 to 100 characters
      *
