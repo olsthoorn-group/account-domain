@@ -2,7 +2,6 @@
 
 namespace OG\Account\Test\Domain\Identity\Model;
 
-use Mockery as m;
 use OG\Account\Domain\Identity\Model\Email;
 use OG\Account\Domain\Identity\Model\HashedActivationCode;
 use OG\Account\Domain\Identity\Model\Activation;
@@ -90,10 +89,5 @@ class ActivationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($one->equals($two));
         $this->assertFalse($one->equals($three));
-    }
-
-    public function tearDown()
-    {
-        m::close();
     }
 }
