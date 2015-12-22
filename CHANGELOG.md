@@ -28,6 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Removed spelling errors
 - Removed unused code
+- Updated dependency version
 
 ## 0.1.0 - 2015-11-02
 

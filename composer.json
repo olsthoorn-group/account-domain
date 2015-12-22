@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": ">=5.5",
-    "og/core-domain": "dev-develop",
+    "og/core-domain": "^0.1",
     "beberlei/assert": "^2.4",
     "paragonie/random_compat": "^1.0"
   },
