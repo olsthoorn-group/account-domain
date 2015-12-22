@@ -29,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed spelling errors
 - Removed unused code
 - Updated dependency version
+- Changed security issues email
 
 ## 0.1.0 - 2015-11-02
 
